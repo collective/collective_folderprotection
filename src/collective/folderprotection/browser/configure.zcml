@@ -1,0 +1,31 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="colelctive.folderprotection">
+
+    <!-- Page to handle the password protected folders -->
+    <browser:page
+        for="collective.folderprotection.exceptions.IPasswordProtectedUnauthorized"
+        name="index.html"
+        class=".passwordprotected.RenderPasswordView"
+        layer="collective.folderprotection.interfaces.IFolderProtectLayer"
+        permission="zope2.View"
+        />
+        
+    <browser:page
+        for="*"
+        name="passwordprompt"
+        class=".passwordprotected.AskForPasswordView"
+        layer="collective.folderprotection.interfaces.IFolderProtectLayer"
+        permission="zope2.View"
+        template="passwordprotected.pt"
+        />
+
+    <browser:page
+        for="*"
+        name="assignpassword"
+        class=".passwordprotected.AssignPasswordFormView"
+        permission="zope2.View"
+        />
+
+</configure>

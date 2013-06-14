@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="colelctive.folderprotection">
+
+    <include package="plone.behavior" file="meta.zcml" />
+
+    <plone:behavior
+        title="Password Protected"
+        description="Allows to protect this content type with a password"
+        provides="collective.folderprotection.behaviors.interfaces.IPasswordProtected"
+        factory="collective.folderprotection.behaviors.passwordprotected.PasswordProtected"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        />
+
+</configure>

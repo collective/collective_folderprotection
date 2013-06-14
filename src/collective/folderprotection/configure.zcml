@@ -9,6 +9,9 @@
 
   <includeDependencies package="." />
 
+  <include package=".behaviors" />
+  <include package=".browser" />
+
   <genericsetup:registerProfile
       name="default"
       title="collective.folderprotection"
@@ -18,4 +21,10 @@
       />
   <!-- -*- extra stuff goes here -*- -->
 
+    <adapter
+        for="*
+             zope.publisher.interfaces.IPublisherRequest"
+        provides="zope.publisher.interfaces.IPublishTraverse"
+        factory="collective.folderprotection.adapters.FolderprotectPublishTraverse" />
+    
 </configure>
