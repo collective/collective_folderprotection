@@ -14,3 +14,7 @@ class IPasswordProtected(Interface):
             description=_(u"Choose a password to protect this object and, if it is a folder, its children."),
             required=False,
         )
+
+
+class IDeleteProtected(Interface):
+    """Marker interface to enable delete protection behavior"""

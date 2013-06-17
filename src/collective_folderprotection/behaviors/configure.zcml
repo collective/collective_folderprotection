@@ -13,4 +13,12 @@
         for="plone.dexterity.interfaces.IDexterityContent"
         />
 
+    <plone:behavior
+        title="Delete Protection"
+        description="Prevents anyone deleting instances of this content type"
+        provides="collective_folderprotection.behaviors.interfaces.IDeleteProtected"
+        factory="collective_folderprotection.behaviors.del_protected.DeleteProtected"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        />
+
 </configure>
