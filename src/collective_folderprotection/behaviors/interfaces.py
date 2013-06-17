@@ -3,7 +3,7 @@ from zope import schema
 from zope.interface import Interface
 from zope.interface import implements
 
-from collective.folderprotection import _
+from collective_folderprotection import _
 
 
 class IPasswordProtected(Interface):

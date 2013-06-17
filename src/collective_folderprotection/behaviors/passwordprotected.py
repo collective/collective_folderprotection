@@ -3,8 +3,8 @@ from datetime import datetime
 
 from zope.annotation import IAnnotations
 
-from collective.folderprotection.config import HASHES_ANNOTATION_KEY
-from collective.folderprotection.config import HASH_COOKIE_KEY
+from collective_folderprotection.config import HASHES_ANNOTATION_KEY
+from collective_folderprotection.config import HASH_COOKIE_KEY
 
 
 class PasswordProtected(object):

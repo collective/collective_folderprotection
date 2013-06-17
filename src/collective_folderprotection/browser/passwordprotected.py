@@ -17,12 +17,12 @@ from plone.app.z3cform.layout import wrap_form
 
 from Products.Five.browser import BrowserView
 
-from collective.folderprotection.behaviors.interfaces import IPasswordProtected
-from collective.folderprotection.config import ANNOTATION_PASSWORD_HASH
-from collective.folderprotection.config import HASHES_ANNOTATION_KEY
-from collective.folderprotection.config import HASH_COOKIE_KEY
-from collective.folderprotection.config import TIME_TO_LIVE
-from collective.folderprotection import _
+from collective_folderprotection.behaviors.interfaces import IPasswordProtected
+from collective_folderprotection.config import ANNOTATION_PASSWORD_HASH
+from collective_folderprotection.config import HASHES_ANNOTATION_KEY
+from collective_folderprotection.config import HASH_COOKIE_KEY
+from collective_folderprotection.config import TIME_TO_LIVE
+from collective_folderprotection import _
 
 
 class RenderPasswordView(BrowserView):

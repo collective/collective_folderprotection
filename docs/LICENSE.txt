@@ -1,4 +1,4 @@
-collective.folderprotection Copyright 2013, <YOUR NAME HERE>
+collective_folderprotection Copyright 2013, Enfold Systems Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

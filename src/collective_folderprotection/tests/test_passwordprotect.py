@@ -11,14 +11,14 @@ from plone.app.testing import logout
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 
-from collective.folderprotection.behaviors.interfaces import IPasswordProtected
+from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 
-from collective.folderprotection.config import HASHES_ANNOTATION_KEY
-from collective.folderprotection.config import HASH_COOKIE_KEY
+from collective_folderprotection.config import HASHES_ANNOTATION_KEY
+from collective_folderprotection.config import HASH_COOKIE_KEY
 
-from collective.folderprotection.exceptions import PasswordProtectedUnauthorized
+from collective_folderprotection.exceptions import PasswordProtectedUnauthorized
 
-from collective.folderprotection.testing import \
+from collective_folderprotection.testing import \
     COLLECTIVE_FOLDERPROTECTION_INTEGRATION_TESTING
 
 

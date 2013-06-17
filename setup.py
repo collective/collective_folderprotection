@@ -14,7 +14,7 @@ long_description = (
     open('CHANGES.txt').read()
     + '\n')
 
-setup(name='collective.folderprotection',
+setup(name='collective_folderprotection',
       version=version,
       description="",
       long_description=long_description,
@@ -35,7 +35,6 @@ setup(name='collective.folderprotection',
       license='gpl',
       packages=find_packages('src'),
       package_dir={'': 'src'},
-      namespace_packages=['collective', ],
       include_package_data=True,
       zip_safe=False,
       install_requires=[

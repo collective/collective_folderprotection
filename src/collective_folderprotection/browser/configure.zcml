@@ -5,10 +5,10 @@
 
     <!-- Page to handle the password protected folders -->
     <browser:page
-        for="collective.folderprotection.exceptions.IPasswordProtectedUnauthorized"
+        for="collective_folderprotection.exceptions.IPasswordProtectedUnauthorized"
         name="index.html"
         class=".passwordprotected.RenderPasswordView"
-        layer="collective.folderprotection.interfaces.IFolderProtectLayer"
+        layer="collective_folderprotection.interfaces.IFolderProtectLayer"
         permission="zope2.View"
         />
         
@@ -16,7 +16,7 @@
         for="*"
         name="passwordprompt"
         class=".passwordprotected.AskForPasswordView"
-        layer="collective.folderprotection.interfaces.IFolderProtectLayer"
+        layer="collective_folderprotection.interfaces.IFolderProtectLayer"
         permission="zope2.View"
         template="passwordprotected.pt"
         />

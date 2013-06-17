@@ -5,9 +5,9 @@ from Products.CMFCore.utils import getToolByName
 
 from plone.browserlayer.utils import registered_layers
 
-from collective.folderprotection.config import PROJECTNAME
+from collective_folderprotection.config import PROJECTNAME
 
-from collective.folderprotection.testing import \
+from collective_folderprotection.testing import \
     COLLECTIVE_FOLDERPROTECTION_INTEGRATION_TESTING
 
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from collective.folderprotection.behaviors.interfaces import IPasswordProtected
-from collective.folderprotection.exceptions import PasswordProtectedUnauthorized
+from collective_folderprotection.behaviors.interfaces import IPasswordProtected
+from collective_folderprotection.exceptions import PasswordProtectedUnauthorized
 
 
 def checkPassword(portal, request):

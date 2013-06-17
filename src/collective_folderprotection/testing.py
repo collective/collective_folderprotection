@@ -16,10 +16,10 @@ class CollectivefolderprotectionLayer(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
-        import collective.folderprotection
+        import collective_folderprotection
         xmlconfig.file(
             'configure.zcml',
-            collective.folderprotection,
+            collective_folderprotection,
             context=configurationContext
         )
 
@@ -31,7 +31,7 @@ class CollectivefolderprotectionLayer(PloneSandboxLayer):
 #        z2.uninstallProduct(app, 'Products.PloneFormGen')
 
     def setUpPloneSite(self, portal):
-        applyProfile(portal, 'collective.folderprotection:test_fixture')
+        applyProfile(portal, 'collective_folderprotection:test_fixture')
         
         # Create a manager user
         pas = portal['acl_users']

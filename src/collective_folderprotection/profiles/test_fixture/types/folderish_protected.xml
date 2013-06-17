@@ -23,7 +23,7 @@
   <element value="plone.app.dexterity.behaviors.metadata.IDublinCore"/>
   <element value="plone.app.content.interfaces.INameFromTitle"/>
   <element
-     value="collective.folderprotection.behaviors.interfaces.IPasswordProtected"/>
+     value="collective_folderprotection.behaviors.interfaces.IPasswordProtected"/>
  </property>
  <property name="schema"></property>
  <property name="model_source">
