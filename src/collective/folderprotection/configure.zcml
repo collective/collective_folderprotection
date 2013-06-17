@@ -20,11 +20,10 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
   <!-- -*- extra stuff goes here -*- -->
-
-    <adapter
-        for="*
-             zope.publisher.interfaces.IPublisherRequest"
-        provides="zope.publisher.interfaces.IPublishTraverse"
-        factory="collective.folderprotection.adapters.FolderprotectPublishTraverse" />
     
+    <subscriber handler=".events.insertCheckPasswordHook"
+        for="Products.CMFCore.interfaces.ISiteRoot
+             zope.app.publication.interfaces.IBeforeTraverseEvent"
+        />
+
 </configure>
