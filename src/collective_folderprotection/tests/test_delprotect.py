@@ -22,13 +22,17 @@ class TestDelProtect(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
         # Create a folderish protected
         self.portal.invokeFactory('folderish_protected', 'protected')
+        self.protected = self.portal['protected']
+        self.protected.invokeFactory('Document', 'internal')
         # And a folderish unprotected
         self.portal.invokeFactory('folderish_not_protected', 'not-protected')
+        self.not_protected = self.portal['not-protected']
+        self.not_protected.invokeFactory('Document', 'internal')
 
     def test_not_allowed_to_remove(self):
-        self.assertRaises(Unauthorized, self.portal.manage_delObjects, 'protected')
-        self.assertIn('protected', self.portal)
+        self.assertRaises(Unauthorized, self.protected.manage_delObjects, 'internal')
+        self.assertIn('internal', self.protected)
         
     def test_allowed_to_remove(self):
-        self.portal.manage_delObjects('not-protected')
-        self.assertNotIn('not-protected', self.portal)
+        self.not_protected.manage_delObjects('internal')
+        self.assertNotIn('internal', self.not_protected)
