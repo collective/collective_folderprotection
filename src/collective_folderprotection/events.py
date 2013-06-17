@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from AccessControl.unauthorized import Unauthorized
+
+from collective_folderprotection.behaviors.interfaces import IDeleteProtected
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 from collective_folderprotection.exceptions import PasswordProtectedUnauthorized
 
@@ -49,3 +52,12 @@ def insertCheckPasswordHook(portal, event):
     during the traversal needs a password
     """
     event.request.post_traverse(checkPassword, (portal, event.request))
+    
+    
+def preventRemove(object, event):
+    try:
+        IDeleteProtected(object)
+        raise Unauthorized()
+    except TypeError:
+        # This content type was not protected, so it can be removed
+        pass

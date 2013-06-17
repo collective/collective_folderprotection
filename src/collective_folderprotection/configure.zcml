@@ -34,4 +34,9 @@
              zope.app.publication.interfaces.IBeforeTraverseEvent"
         />
 
+    <subscriber handler=".events.preventRemove"
+        for="plone.dexterity.interfaces.IDexterityContent
+             OFS.interfaces.IObjectWillBeRemovedEvent"
+        />
+
 </configure>
