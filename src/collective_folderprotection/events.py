@@ -16,8 +16,8 @@ def checkPassword(portal, request):
     for name in full_path.split('/'):
         try:
             ob = ob.restrictedTraverse(name)
-        except AttributeError:
-            # This path is not traversable, just ignore
+        except:
+            # This path is not traversable or doesn't exist, just ignore
             break
         try:
             authorized = False
