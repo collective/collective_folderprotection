@@ -1,0 +1,37 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=5 seconds  implicit_wait=0.5 seconds
+Resource  keywords.txt
+Variables  plone/app/testing/interfaces.py
+
+Suite Setup  Start browser
+Suite Teardown  Close All Browsers
+
+*** Variables ***
+
+${BROWSER} =  firefox
+
+*** Test Cases ***
+
+Owner should be allowed to access protected folder
+    Goto Homepage
+    Log In As Contributor User
+    Create Protected Folder  Protected
+    Go to   ${protected_folder_url}
+    Page Should Not Contain  This resource is password protected
+
+Owner should be able to access the 'Assign password' view
+    Goto Homepage
+    Log In As Contributor User
+    Create Protected Folder  Protected
+    Go to   ${protected_folder_url}
+    Page Should Contain  Assign password
+    Click Link  link=Assign password
+    Page Should Contain  Choose a password to protect this object and, if it is a folder, its children.
+
+Owner should not see the 'Assign password' view for a not protected folder
+    Goto Homepage
+    Log In As Contributor User
+    Create Not Protected Folder  Not-Protected
+    Go to   ${not_protected_folder_url}
+    Page Should Not Contain  Assign password

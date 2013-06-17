@@ -8,7 +8,15 @@ import unittest
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTests([
-        layered(robotsuite.RobotTestSuite("robot_test.txt"),
+        layered(robotsuite.RobotTestSuite("manager_functional.txt"),
+                layer=COLLECTIVE_FOLDERPROTECTION_FUNCTIONAL_TESTING)
+    ])
+    suite.addTests([
+        layered(robotsuite.RobotTestSuite("owner_functional.txt"),
+                layer=COLLECTIVE_FOLDERPROTECTION_FUNCTIONAL_TESTING)
+    ])
+    suite.addTests([
+        layered(robotsuite.RobotTestSuite("member_functional.txt"),
                 layer=COLLECTIVE_FOLDERPROTECTION_FUNCTIONAL_TESTING)
     ])
     return suite

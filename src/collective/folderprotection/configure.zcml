@@ -19,6 +19,14 @@
       description="Installs the collective.folderprotection package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
+      
+  <genericsetup:registerProfile
+      name="test_fixture"
+      title="collective.folderprotection"
+      directory="profiles/test_fixture"
+      description="Test fixture for the collective.folderprotection package (Do not install)"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
   <!-- -*- extra stuff goes here -*- -->
     
     <subscriber handler=".events.insertCheckPasswordHook"

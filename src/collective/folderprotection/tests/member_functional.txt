@@ -1,0 +1,82 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=5 seconds  implicit_wait=0.5 seconds
+Resource  keywords.txt
+Variables  plone/app/testing/interfaces.py
+
+Suite Setup  Start browser
+Suite Teardown  Close All Browsers
+
+*** Variables ***
+
+${BROWSER} =  firefox
+
+*** Test Cases ***
+
+Member should not be allowed to access protected folder
+    Goto Homepage
+    Log In As Site Owner
+    Create Protected Folder  Protected
+    Log In As Test User
+    Go to   ${protected_folder_url}
+    Page Should Contain  This resource is password protected
+
+Member can access protected folder after providing password
+    Goto Homepage
+    Log In As Site Owner
+    Create Protected Folder  Protected
+    Click Link  link=Assign password
+    Input Text  css=input#form-widgets-password  thepassword
+    Click Button  Save
+    Log In As Test User
+    Go to   ${protected_folder_url}
+    Input Text  css=input#password  thepassword
+    Click Button  submit
+    Page Should Not Contain  This resource is password protected
+    
+Member should be redirected to the inner content where he requested access in the first place
+    Goto Homepage
+    Log In As Site Owner
+    Create Protected Folder  Protected
+    Click Link  link=Assign password
+    Input Text  css=input#form-widgets-password  thepassword
+    Click Button  Save
+    Go to   ${protected_folder_url}
+    Create Page  A Page  This is an internal page
+    Log In As Test User
+    Go to   ${internal_protected}
+    Page Should Contain  This resource is password protected
+    Input Text  css=input#password  thepassword
+    Click Button  submit
+    Page Should Not Contain  This resource is password protected
+    Page Should Contain  This is an internal page
+    
+Member can still access a folder that is not protected
+    Goto Homepage
+    Log In As Site Owner
+    Create Not Protected Folder  Not-Protected
+    Create Page  A Page  This is an internal page
+    Log In As Test User
+    Go to   ${internal_not_protected}
+    Page Should Not Contain  This resource is password protected
+    Page Should Contain  This is an internal page
+
+After a first attempt, Member should still be redirected to the inner content where he requested access in the first place
+    Goto Homepage
+    Log In As Site Owner
+    Create Protected Folder  Protected
+    Click Link  link=Assign password
+    Input Text  css=input#form-widgets-password  thepassword
+    Click Button  Save
+    Go to   ${protected_folder_url}
+    Create Page  A Page  This is an internal page
+    Log In As Test User
+    Go to   ${internal_protected}
+    Page Should Contain  This resource is password protected
+    Input Text  css=input#password  thewrongpassword
+    Click Button  submit
+    Page Should Contain  This resource is password protected
+    Input Text  css=input#password  thepassword
+    Click Button  submit
+    Page Should Not Contain  This resource is password protected
+    Page Should Contain  This is an internal page
