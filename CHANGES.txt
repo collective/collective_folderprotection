@@ -4,5 +4,7 @@ Changelog
 1.0-dev (unreleased)
 --------------------
 
+- Include behavior to allow setting a password for viewing a folder [frapell]
+
 - Package created using templer
   [frapell]
