@@ -77,8 +77,6 @@ class AskForPasswordView(BrowserView):
 
 class AssignPasswordForm(form.Form):
 
-    #template = ViewPageTemplateFile('templates/addregulationsfolder.pt')
-
     fields = field.Fields(IPasswordProtected)
 
     ignoreContext = False

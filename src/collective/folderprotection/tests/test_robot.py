@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from  collective.folderprotection.testing import COLLECTIVE_FOLDERPROTECTION_FUNCTIONAL_TESTING
 from plone.testing import layered
 import robotsuite
