@@ -55,8 +55,9 @@ def insertCheckPasswordHook(portal, event):
     
     
 def preventRemove(object, event):
+    parent = object.aq_parent
     try:
-        IDeleteProtected(object)
+        IDeleteProtected(parent)
         raise Unauthorized()
     except TypeError:
         # This content type was not protected, so it can be removed

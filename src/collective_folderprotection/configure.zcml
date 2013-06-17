@@ -35,7 +35,7 @@
         />
 
     <subscriber handler=".events.preventRemove"
-        for="plone.dexterity.interfaces.IDexterityContent
+        for="*
              OFS.interfaces.IObjectWillBeRemovedEvent"
         />
 
