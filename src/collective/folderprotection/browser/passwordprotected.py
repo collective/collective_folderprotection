@@ -11,6 +11,8 @@ from zope.annotation import IAnnotations
 
 from zope.component import getMultiAdapter
 
+from zope.interface import Interface
+
 from plone.app.z3cform.layout import wrap_form
 
 from Products.Five.browser import BrowserView
@@ -102,3 +104,25 @@ class AssignPasswordForm(form.Form):
         self.status = _(u"Cancelled.")
 
 AssignPasswordFormView = wrap_form(AssignPasswordForm)
+
+
+class IAssignPasswordValidation(Interface):
+    
+    def allowed():
+        """ Decide when to show the Assign password tab"""
+
+
+class AssignPasswordValidation(BrowserView):
+    
+    def allowed(self):
+        authorized = False
+        try:
+            IPasswordProtected(self.context)
+            pm = self.context.portal_membership
+            roles = pm.getAuthenticatedMember().getRolesInContext(self.context)
+            if ('Manager' in roles or 'Owner' in roles):
+                authorized = True
+        except TypeError:
+            pass
+
+        return authorized

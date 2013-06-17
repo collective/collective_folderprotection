@@ -28,4 +28,12 @@
         permission="zope2.View"
         />
 
+    <browser:page
+        for="*"
+        name="authorized_to_set_password"
+        class=".passwordprotected.AssignPasswordValidation"
+        allowed_interface=".passwordprotected.IAssignPasswordValidation"
+        permission="zope2.View"
+        />
+
 </configure>
