@@ -13,6 +13,7 @@ ${BROWSER} =  firefox
 
 *** Test Cases ***
 
+
 Manager should be allowed to access protected folder
     Goto Homepage
     Log In As Site Owner
@@ -40,4 +41,33 @@ Manager should not see the 'Assign password' view for a non protected folder
     Log In As Manager User
     Go to   ${not_protected_folder_url}
     Page Should Not Contain  Assign password
+
+Manager should not be able to remove protected folder
+    Goto Homepage
+    Log In As Site Owner
+    Create Protected Folder  Protected
+    Go to   ${protected_folder_url}
+    Remove Content
+    Go to   ${protected_folder_url}
+    Page Should Not Contain  This page does not seem to exist
+    Log In As Manager User
+    Go to   ${protected_folder_url}
+    Remove Content
+    Go to   ${protected_folder_url}
+    Page Should Not Contain  This page does not seem to exist
     
+Manager should be able to remove not protected folder
+    Goto Homepage
+    Log In As Site Owner
+    Create Not Protected Folder  Not-Protected
+    Go to   ${not_protected_folder_url}
+    Remove Content
+    Go to   ${not_protected_folder_url}
+    Page Should Contain  This page does not seem to exist
+    Goto Homepage
+    Create Not Protected Folder  Not-Protected
+    Log In As Manager User
+    Go to   ${not_protected_folder_url}
+    Remove Content
+    Go to   ${not_protected_folder_url}
+    Page Should Contain  This page does not seem to exist

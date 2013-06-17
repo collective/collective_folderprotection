@@ -83,6 +83,19 @@ Click Add Page
     Click Link  link=Page
     Page Should Contain  Page
 
+Open Action Menu
+    Open Menu  plone-contentmenu-actions
+
+Click Delete Action
+    Open Action Menu
+    Click Link  link=Delete
+
+Remove Content
+    Click Delete Action
+    Wait Until Page Contains Element  css=input.destructive
+    Click Button  css=input.destructive
+    Page Should Contain  Plone site
+
 Create Protected Folder
     [arguments]  ${title} 
     Click Add Folderish Protected

@@ -24,6 +24,8 @@
   <element value="plone.app.content.interfaces.INameFromTitle"/>
   <element
      value="collective_folderprotection.behaviors.interfaces.IPasswordProtected"/>
+  <element
+     value="collective_folderprotection.behaviors.interfaces.IDeleteProtected"/>
  </property>
  <property name="schema"></property>
  <property name="model_source">
