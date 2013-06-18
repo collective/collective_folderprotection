@@ -52,10 +52,10 @@ def insertCheckPasswordHook(portal, event):
     during the traversal needs a password
     """
     event.request.post_traverse(checkPassword, (portal, event.request))
-    
-    
+
+
 def preventRemove(object, event):
-    parent = object.aq_parent
+    parent = event.oldParent
     try:
         IDeleteProtected(parent)
         raise Unauthorized()
