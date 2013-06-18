@@ -36,4 +36,11 @@
         permission="zope2.View"
         />
 
+    <browser:page
+        for="*"
+        name="object_rename"
+        class=".rename_protected.ObjectRenameView"
+        permission="zope2.View"
+        />
+
 </configure>
