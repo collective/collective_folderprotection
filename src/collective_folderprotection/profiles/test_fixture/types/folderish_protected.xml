@@ -26,6 +26,8 @@
      value="collective_folderprotection.behaviors.interfaces.IPasswordProtected"/>
   <element
      value="collective_folderprotection.behaviors.interfaces.IDeleteProtected"/>
+  <element
+     value="collective_folderprotection.behaviors.interfaces.IRenameProtected"/>
  </property>
  <property name="schema"></property>
  <property name="model_source">

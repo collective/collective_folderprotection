@@ -75,3 +75,35 @@ Manager should be able to remove not protected folder
     Remove Content
     Go to   ${internal_not_protected}
     Page Should Contain  This page does not seem to exist
+
+Manager should not be able to rename content inside protected folder
+    Goto Homepage
+    Log In As Site Owner
+    Create Protected Folder  Protected
+    Go to   ${protected_folder_url}
+    Create Page  A Page  This is an internal page
+    Go to   ${internal_protected}
+    Click Rename Action
+    Page Should Contain  Insufficient Privileges
+    Log In As Manager User
+    Go to   ${internal_protected}
+    Click Rename Action
+    Page Should Contain  Insufficient Privileges
+
+Manager should be able to rename content inside not protected folder
+    Goto Homepage
+    Log In As Site Owner
+    Create Not Protected Folder  Not-Protected
+    Go to   ${not_protected_folder_url}
+    Create Page  A Page  This is an internal page
+    Go to   ${internal_not_protected}
+    Rename Content  a-page  new-page  New Page
+    Go to   ${internal_not_protected}
+    ${BASE}  Get Element Attribute  tag=base@href
+    Should Be Equal  ${BASE}  ${not_protected_folder_url}/new-page
+    Page Should Contain  New Page
+    Log In As Manager User
+    Go to   ${not_protected_folder_url}/new-page
+    Rename Content  new-page  a-page  A Page
+    Go to   ${internal_not_protected}
+    Page Should Not Contain  This page does not seem to exist
