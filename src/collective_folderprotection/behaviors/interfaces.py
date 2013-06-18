@@ -18,3 +18,7 @@ class IPasswordProtected(Interface):
 
 class IDeleteProtected(Interface):
     """Marker interface to enable delete protection behavior"""
+
+
+class IRenameProtected(Interface):
+    """Marker interface to enable rename protection behavior"""

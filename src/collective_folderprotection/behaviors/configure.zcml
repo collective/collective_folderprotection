@@ -15,9 +15,17 @@
 
     <plone:behavior
         title="Delete Protection"
-        description="Prevents anyone deleting instances of this content type"
+        description="Prevents anyone deleting content created inside this content type"
         provides="collective_folderprotection.behaviors.interfaces.IDeleteProtected"
         factory="collective_folderprotection.behaviors.del_protected.DeleteProtected"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        />
+
+    <plone:behavior
+        title="Rename Protection"
+        description="Prevents anyone renaming content created inside this content type"
+        provides="collective_folderprotection.behaviors.interfaces.IRenameProtected"
+        factory="collective_folderprotection.behaviors.rename_protected.RenameProtected"
         for="plone.dexterity.interfaces.IDexterityContent"
         />
 
