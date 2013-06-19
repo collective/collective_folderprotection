@@ -4,6 +4,10 @@ Changelog
 1.0-dev (unreleased)
 --------------------
 
+- Include behavior to prevent removing items from a folderish [frapell]
+
+- Include behavior to prevent renaming items in a folderish (only through UI). [frapell]
+
 - Include behavior to allow setting a password for viewing a folder [frapell]
 
 - Package created using templer
