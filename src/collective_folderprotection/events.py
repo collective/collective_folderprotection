@@ -10,7 +10,11 @@ from collective_folderprotection.exceptions import PasswordProtectedUnauthorized
 def checkPassword(portal, request):
     portal_path = '/'.join(portal.getPhysicalPath())
     # We get the full path
-    full_path = request.get('PATH_INFO')
+    if 'VIRTUAL_URL_PARTS' in request:
+        full_path = request.get('VIRTUAL_URL_PARTS')[1]
+    else:
+        full_path = request.get('PATH_INFO')
+
     if full_path.startswith(portal_path):
         # just strip the portal_path from the full_path and the '/'
         full_path = full_path[len(portal_path)+1:]

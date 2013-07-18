@@ -28,7 +28,12 @@ from collective_folderprotection import _
 class RenderPasswordView(BrowserView):
 
     def __call__(self):
-        self.came_from = self.request.get('PATH_INFO')
+      
+        if 'VIRTUAL_URL_PARTS' in self.request:
+            self.came_from = self.request.get('VIRTUAL_URL_PARTS')[1]
+        else:
+            self.came_from = self.request.get('PATH_INFO')
+
         self.request.set('came_from', self.came_from)
         # Get the object for which we need to get access to
         ob = getattr(self.__parent__, self.context.name)
