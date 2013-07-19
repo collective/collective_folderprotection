@@ -29,9 +29,11 @@ def checkPassword(portal, request):
         try:
             authorized = False
             passwordprotected = IPasswordProtected(ob)
-            # We are at a content type that is password protected, so
+            # We are at a content type that is password protected, first check
+            # if the password is actually set for this content, and then
             # see if we are not actually at the passwordprompt view
-            if "passwordprompt" not in full_path:
+            if (passwordprotected.is_password_protected() and
+                "passwordprompt" not in full_path):
                 # We are not at the passwordprotected prompt, so we now check
                 # if the current user is not Manager or the Owner
                 pm = portal.portal_membership
@@ -43,7 +45,6 @@ def checkPassword(portal, request):
 
                 if not (authorized or passwordprotected.allowed_to_access()):
                     # User is not authorized to access this resource
-                    #import pdb;pdb.set_trace()
                     raise PasswordProtectedUnauthorized(name=name)
         except TypeError:
             # Object does not provide behavior, so just continue

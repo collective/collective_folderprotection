@@ -43,4 +43,14 @@
         permission="zope2.View"
         />
 
+    <!-- Icon to show if the item has a password set or not.
+         Intended to be shown in the folder_contents view, which iterates
+         over brain objects -->
+    <adapter for="*
+                  collective_folderprotection.interfaces.IFolderProtectLayer
+                  Products.ZCatalog.interfaces.ICatalogBrain"
+           factory=".passwordprotected.PasswordProtectedIcon"
+           provides="plone.app.layout.icons.interfaces.IContentIcon" />
+ 
+ 
 </configure>

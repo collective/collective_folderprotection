@@ -11,7 +11,11 @@ from zope.annotation import IAnnotations
 
 from zope.component import getMultiAdapter
 
+from zope.interface import implements
 from zope.interface import Interface
+
+from plone.app.layout.icons.icons import CatalogBrainContentIcon
+from plone.app.layout.icons.interfaces import IContentIcon
 
 from plone.app.z3cform.layout import wrap_form
 
@@ -95,14 +99,27 @@ class AssignPasswordForm(form.Form):
             self.status = _(u"Please correct errors")
             return
         passw = data.get('password', '')
-        passw_hash = md5(passw).hexdigest()
         ann = IAnnotations(self.context)
-        if HASHES_ANNOTATION_KEY in ann:
-            # Remove old storde hashes
-            del ann[HASHES_ANNOTATION_KEY]
 
-        ann[ANNOTATION_PASSWORD_HASH] = passw_hash
-        self.status = _(u"Password assigned.")
+        if passw and passw != '':
+            passw_hash = md5(passw).hexdigest()
+            if HASHES_ANNOTATION_KEY in ann:
+                # Remove old storde hashes
+                del ann[HASHES_ANNOTATION_KEY]
+
+            ann[ANNOTATION_PASSWORD_HASH] = passw_hash
+            self.status = _(u"Password assigned.")
+
+        else:
+            if HASHES_ANNOTATION_KEY in ann:
+                # Remove old storde hashes
+                del ann[HASHES_ANNOTATION_KEY]
+
+            if ANNOTATION_PASSWORD_HASH in ann:
+                # Remove old password
+                del ann[ANNOTATION_PASSWORD_HASH]
+
+            self.status = _(u"This content is not going to be password protected.")
 
     @button.buttonAndHandler(_('Cancel'), name='cancel')
     def cancel(self, action):
@@ -131,3 +148,51 @@ class AssignPasswordValidation(BrowserView):
             pass
 
         return authorized
+
+
+class PasswordProtectedIcon(CatalogBrainContentIcon):
+    implements(IContentIcon)
+
+    def __init__(self, context, request, brain):
+        self.context = context
+        self.request = request
+        self.brain = brain
+        self.has_behavior_enabled = False
+        self.is_protected = False
+        
+        portal_types = self.context.portal_types
+        portal_type = self.brain.portal_type
+        behaviors = getattr(portal_types[portal_type], 'behaviors', None)
+        if (behaviors and
+            'collective_folderprotection.behaviors.interfaces.IPasswordProtected' in behaviors):
+            self.has_behavior_enabled = True
+            ob = self.brain.getObject()
+            passwordprotected = IPasswordProtected(ob)
+            
+            if passwordprotected.is_password_protected():
+                self.is_protected = True
+
+    @property
+    def url(self):
+        if not self.has_behavior_enabled:
+            return super(PasswordProtectedIcon, self).url
+        
+        if self.is_protected:
+            path = "++resource++resources/lock_locked_16.png"
+        else:
+            path = "++resource++resources/lock_unlocked_16.png"
+
+        portal_state_view = getMultiAdapter(
+            (self.context, self.request), name=u'plone_portal_state')
+        portal_url = portal_state_view.portal_url()
+        return "%s/%s" % (portal_url, path)
+
+    @property
+    def description(self):
+        if not self.has_behavior_enabled:
+            return super(PasswordProtectedIcon, self).description
+          
+        if self.is_protected:
+            return "%s protected by password." % self.brain['portal_type']
+        else:
+            return "%s not protected by password." % self.brain['portal_type']
