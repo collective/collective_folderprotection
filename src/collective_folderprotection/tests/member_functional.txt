@@ -13,13 +13,13 @@ ${BROWSER} =  firefox
 
 *** Test Cases ***
 
-Member should not be allowed to access protected folder
+Member can access a folder that was not given a password
     Goto Homepage
     Log In As Site Owner
     Create Protected Folder  Protected
     Log In As Test User
     Go to   ${protected_folder_url}
-    Page Should Contain  This resource is password protected
+    Page Should Not Contain  This resource is password protected
 
 Member can access protected folder after providing password
     Goto Homepage
@@ -30,6 +30,7 @@ Member can access protected folder after providing password
     Click Button  Save
     Log In As Test User
     Go to   ${protected_folder_url}
+    Page Should Contain  This resource is password protected
     Input Text  css=input#password  thepassword
     Click Button  submit
     Page Should Not Contain  This resource is password protected

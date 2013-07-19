@@ -35,3 +35,38 @@ Owner should not see the 'Assign password' view for a not protected folder
     Create Not Protected Folder  Not-Protected
     Go to   ${not_protected_folder_url}
     Page Should Not Contain  Assign password
+
+If there are 2 protected folders, one with password and the other without, then show 2 different icons in folder_contents view
+    Goto Homepage
+    Log In As Contributor User
+    Create Protected Folder  Protected
+    Go to   ${PLONE_URL}/folder_contents
+    Page Should Not Contain Image  xpath=//img[@src="${PLONE_URL}/++resource++resources/lock_locked_16.png"]
+    Page Should Contain Image  xpath=//img[@src="${PLONE_URL}/++resource++resources/lock_unlocked_16.png"]
+    Go to   ${protected_folder_url}
+    Click Link  link=Assign password
+    Input Text  css=input#form-widgets-password  thepassword
+    Click Button  Save
+    Go to   ${PLONE_URL}/folder_contents
+    Page Should Contain Image  xpath=//img[@src="${PLONE_URL}/++resource++resources/lock_locked_16.png"]
+    Page Should Not Contain Image  xpath=//img[@src="${PLONE_URL}/++resource++resources/lock_unlocked_16.png"]
+    Goto Homepage
+    Create Protected Folder  ProtectedNoPassword
+    Go to   ${PLONE_URL}/folder_contents
+    Page Should Contain Image  xpath=//img[@src="${PLONE_URL}/++resource++resources/lock_locked_16.png"]
+    Page Should Contain Image  xpath=//img[@src="${PLONE_URL}/++resource++resources/lock_unlocked_16.png"]
+
+If one assign a blank password, the password protection is removed
+    Goto Homepage
+    Log In As Contributor User
+    Create Protected Folder  Protected
+    Go to   ${PLONE_URL}/folder_contents
+    Go to   ${protected_folder_url}
+    Click Link  link=Assign password
+    Input Text  css=input#form-widgets-password  thepassword
+    Click Button  Save
+    Go to   ${protected_folder_url}
+    Click Link  link=Assign password
+    Click Button  Save
+    Page Should Contain  This content is not going to be password protected.
+    

@@ -13,15 +13,6 @@ ${BROWSER} =  firefox
 
 *** Test Cases ***
 
-
-Manager should be allowed to access protected folder
-    Goto Homepage
-    Log In As Site Owner
-    Create Protected Folder  Protected
-    Log In As Manager User
-    Go to   ${protected_folder_url}
-    Page Should Not Contain  This resource is password protected
-
 Manager should be able to access the 'Assign password' view
     Goto Homepage
     Log In As Site Owner
@@ -31,6 +22,17 @@ Manager should be able to access the 'Assign password' view
     Page Should Contain  Assign password
     Click Link  link=Assign password
     Page Should Contain  Choose a password to protect this object and, if it is a folder, its children.
+
+Manager should be allowed to access protected folder
+    Goto Homepage
+    Log In As Site Owner
+    Create Protected Folder  Protected
+    Click Link  link=Assign password
+    Input Text  css=input#form-widgets-password  thepassword
+    Click Button  Save
+    Log In As Manager User
+    Go to   ${protected_folder_url}
+    Page Should Not Contain  This resource is password protected
 
 Manager should not see the 'Assign password' view for a non protected folder
     Goto Homepage
