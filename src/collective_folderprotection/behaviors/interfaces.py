@@ -1,19 +1,34 @@
 
+from z3c.form.interfaces import IEditForm, IAddForm
+
 from zope import schema
+from zope.interface import alsoProvides
 from zope.interface import Interface
 from zope.interface import implements
+
+from plone.autoform import directives as form
+from plone.autoform.interfaces import IFormFieldProvider
+
+from plone.supermodel import model
 
 from collective_folderprotection import _
 
 
-class IPasswordProtected(Interface):
-    """Marker interface to enable password protected behavior"""
+class IPasswordProtected(model.Schema):
+    """Behavior interface to enable password protection"""
 
     password = schema.Password(
             title=_(u"Password"),
             description=_(u"Choose a password to protect this object and, if it is a folder, its children."),
             required=False,
         )
+    
+    form.omitted('password')
+    form.no_omit(IEditForm, 'password')
+    form.no_omit(IAddForm, 'password')
+
+
+alsoProvides(IPasswordProtected, IFormFieldProvider)
 
 
 class IDeleteProtected(Interface):

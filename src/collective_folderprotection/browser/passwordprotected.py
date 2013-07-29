@@ -22,7 +22,6 @@ from plone.app.z3cform.layout import wrap_form
 from Products.Five.browser import BrowserView
 
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
-from collective_folderprotection.config import ANNOTATION_PASSWORD_HASH
 from collective_folderprotection.config import HASHES_ANNOTATION_KEY
 from collective_folderprotection.config import HASH_COOKIE_KEY
 from collective_folderprotection.config import TIME_TO_LIVE
@@ -55,13 +54,14 @@ class AskForPasswordView(BrowserView):
             passw = self.request.get('password', '')
             passw_hash = md5(passw).hexdigest()
             ann = IAnnotations(self.context)
-            if ANNOTATION_PASSWORD_HASH in ann:
+            passw_behavior = IPasswordProtected(self.context)
+            if passw_behavior.is_password_protected():
                 # If this is not true, means the Manager has not set a password
                 # for this resource yet, then do not authenticate...
                 
                 # If there's no came_from, then just go to the object itself
                 came_from = self.request.get('came_from', '/'.join(self.context.getPhysicalPath()))
-                if passw_hash == ann[ANNOTATION_PASSWORD_HASH]:
+                if passw_hash == passw_behavior.password:
                     # The user has entered a valid password, then we store a
                     # random hash with a TTL so we know he already authenticated
                     hashes = ann.get(HASHES_ANNOTATION_KEY, {})
@@ -99,26 +99,14 @@ class AssignPasswordForm(form.Form):
             self.status = _(u"Please correct errors")
             return
         passw = data.get('password', '')
-        ann = IAnnotations(self.context)
+        passw_behavior = IPasswordProtected(self.context)
 
         if passw and passw != '':
-            passw_hash = md5(passw).hexdigest()
-            if HASHES_ANNOTATION_KEY in ann:
-                # Remove old storde hashes
-                del ann[HASHES_ANNOTATION_KEY]
-
-            ann[ANNOTATION_PASSWORD_HASH] = passw_hash
+            passw_behavior.assign_password(passw)
             self.status = _(u"Password assigned.")
 
         else:
-            if HASHES_ANNOTATION_KEY in ann:
-                # Remove old storde hashes
-                del ann[HASHES_ANNOTATION_KEY]
-
-            if ANNOTATION_PASSWORD_HASH in ann:
-                # Remove old password
-                del ann[ANNOTATION_PASSWORD_HASH]
-
+            passw_behavior.remove_password()
             self.status = _(u"This content is not going to be password protected.")
 
     @button.buttonAndHandler(_('Cancel'), name='cancel')
