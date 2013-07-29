@@ -52,12 +52,10 @@ Programatically on content creation
 
 If you are creating content programatically, you can assign a password when calling the function, just by adding the optional "password" argumnent.
 
-
-  .. code-block:: python
-  from plone.dexterity.utils import createContentInContainer
-  ...
-  ...
-  createContentInContainer(self.portal, "your.app.dexterity.fti.information", title=title, password=pw)
+    from plone.dexterity.utils import createContentInContainer
+    ...
+    ...
+    createContentInContainer(self.portal, "your.app.dexterity.fti.information", title=title, password=pw)
 
 
 UI
