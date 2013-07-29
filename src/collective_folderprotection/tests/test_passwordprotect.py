@@ -11,6 +11,8 @@ from plone.app.testing import logout
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 
+from plone.dexterity.utils import createContentInContainer
+
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 
 from collective_folderprotection.config import HASHES_ANNOTATION_KEY
@@ -33,8 +35,9 @@ class TestPasswordProtect(unittest.TestCase):
         
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
         # Create a folderish protected
-        self.portal.invokeFactory('folderish_protected', 'protected')
-        self.folder = self.portal['protected']
+        self.folder = createContentInContainer(self.portal,
+                                               'folderish_protected', 
+                                               title='Protected')
 
     def test_not_allowed_if_cookie_not_present(self):
         passwordprotect = IPasswordProtected(self.folder)
@@ -71,3 +74,29 @@ class TestPasswordProtect(unittest.TestCase):
 
         passwordprotect = IPasswordProtected(self.folder)
         self.assertTrue(passwordprotect.allowed_to_access())
+
+    def test_assign_password(self):
+        pw = 'this-is-the-pw'
+        passwordprotect = IPasswordProtected(self.folder)
+        self.assertFalse(passwordprotect.is_password_protected())
+        passwordprotect.assign_password(pw)
+        self.assertTrue(passwordprotect.is_password_protected())
+
+    def test_remove_password(self):
+        pw = 'this-is-the-pw'
+        passwordprotect = IPasswordProtected(self.folder)
+        passwordprotect.assign_password(pw)
+        self.assertTrue(passwordprotect.is_password_protected())
+        passwordprotect.remove_password()
+        self.assertFalse(passwordprotect.is_password_protected())
+
+    def test_set_password_on_creationg(self):
+        pw = 'this-is-the-pw'
+
+        protected = createContentInContainer(self.portal,
+                                             'folderish_protected', 
+                                             title='Protected',
+                                             password=pw)
+
+        passwordprotect = IPasswordProtected(protected)
+        self.assertTrue(passwordprotect.is_password_protected())

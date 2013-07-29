@@ -81,3 +81,34 @@ After a first attempt, Member should still be redirected to the inner content wh
     Click Button  submit
     Page Should Not Contain  This resource is password protected
     Page Should Contain  This is an internal page
+
+Password can be set from the add view
+    Goto Homepage
+    Log In As Site Owner
+    Click Add Folderish Protected
+    Input Text  css=input#form-widgets-IDublinCore-title  Protected
+    Input Text  css=input#form-widgets-IPasswordProtected-password  thepassword
+    Click Button  Save
+    Page Should Contain  Item created
+    Log In As Test User
+    Go to   ${protected_folder_url}
+    Page Should Contain  This resource is password protected
+
+Password can be set from the edit view
+    Goto Homepage
+    Log In As Site Owner
+    Click Add Folderish Protected
+    Input Text  css=input#form-widgets-IDublinCore-title  Protected
+    Click Button  Save
+    Page Should Contain  Item created
+    Log In As Test User
+    Go to   ${protected_folder_url}
+    Page Should Not Contain  This resource is password protected
+    Log In As Site Owner
+    Go to   ${protected_folder_url}
+    Click Link  link=Edit    
+    Input Text  css=input#form-widgets-IPasswordProtected-password  thepassword
+    Click Button  Save
+    Log In As Test User
+    Go to   ${protected_folder_url}
+    Page Should Contain  This resource is password protected
