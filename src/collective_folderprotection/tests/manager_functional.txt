@@ -28,7 +28,7 @@ Manager should be allowed to access protected folder
     Log In As Site Owner
     Create Protected Folder  Protected
     Click Link  link=Assign password
-    Input Text  css=input#form-widgets-password  thepassword
+    Input Text  css=input#form-widgets-passw_hash  thepassword
     Click Button  Save
     Log In As Manager User
     Go to   ${protected_folder_url}

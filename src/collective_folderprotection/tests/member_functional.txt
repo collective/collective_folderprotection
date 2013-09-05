@@ -26,7 +26,7 @@ Member can access protected folder after providing password
     Log In As Site Owner
     Create Protected Folder  Protected
     Click Link  link=Assign password
-    Input Text  css=input#form-widgets-password  thepassword
+    Input Text  css=input#form-widgets-passw_hash  thepassword
     Click Button  Save
     Log In As Test User
     Go to   ${protected_folder_url}
@@ -40,7 +40,7 @@ Member should be redirected to the inner content where he requested access in th
     Log In As Site Owner
     Create Protected Folder  Protected
     Click Link  link=Assign password
-    Input Text  css=input#form-widgets-password  thepassword
+    Input Text  css=input#form-widgets-passw_hash  thepassword
     Click Button  Save
     Go to   ${protected_folder_url}
     Create Page  A Page  This is an internal page
@@ -67,7 +67,7 @@ After a first attempt, Member should still be redirected to the inner content wh
     Log In As Site Owner
     Create Protected Folder  Protected
     Click Link  link=Assign password
-    Input Text  css=input#form-widgets-password  thepassword
+    Input Text  css=input#form-widgets-passw_hash  thepassword
     Click Button  Save
     Go to   ${protected_folder_url}
     Create Page  A Page  This is an internal page
@@ -87,7 +87,7 @@ Password can be set from the add view
     Log In As Site Owner
     Click Add Folderish Protected
     Input Text  css=input#form-widgets-IDublinCore-title  Protected
-    Input Text  css=input#form-widgets-IPasswordProtected-password  thepassword
+    Input Text  css=input#form-widgets-IPasswordProtected-passw_hash  thepassword
     Click Button  Save
     Page Should Contain  Item created
     Log In As Test User
@@ -107,7 +107,7 @@ Password can be set from the edit view
     Log In As Site Owner
     Go to   ${protected_folder_url}
     Click Link  link=Edit    
-    Input Text  css=input#form-widgets-IPasswordProtected-password  thepassword
+    Input Text  css=input#form-widgets-IPasswordProtected-passw_hash  thepassword
     Click Button  Save
     Log In As Test User
     Go to   ${protected_folder_url}
@@ -158,7 +158,7 @@ If password field is left empty, the password should not change
     Go to   ${PLONE_URL}/folder_contents
     Go to   ${protected_folder_url}
     Click Link  link=Assign password
-    Input Text  css=input#form-widgets-password  thepassword
+    Input Text  css=input#form-widgets-passw_hash  thepassword
     Click Button  Save
     Go to   ${protected_folder_url}
     Click Link  link=Assign password

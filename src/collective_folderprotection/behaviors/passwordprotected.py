@@ -14,7 +14,7 @@ class PasswordProtected(object):
         self.context = context
 
     def is_password_protected(self):
-        return getattr(self.context, 'password', False)
+        return getattr(self.context, 'passw_hash', False)
 
     def allowed_to_access(self):
         allowed = False
@@ -40,14 +40,14 @@ class PasswordProtected(object):
                 # Remove old storde hashes
                 del ann[HASHES_ANNOTATION_KEY]
 
-            self.context.password = passw_hash
+            self.context.passw_hash = passw_hash
         else:
             # If no password was provided, just remove everything
             if HASHES_ANNOTATION_KEY in ann:
                 # Remove old storde hashes
                 del ann[HASHES_ANNOTATION_KEY]
 
-            self.context.password = None
+            self.context.passw_hash = None
 
     def assign_password(self, passw):
         self._assign_password(passw)
@@ -56,7 +56,7 @@ class PasswordProtected(object):
         self._assign_password(None)
 
     def _get_password(self):
-        return self.context.password
+        return self.context.passw_hash
 
     def _set_password(self, value):
         if value:
@@ -69,5 +69,5 @@ class PasswordProtected(object):
         if value:
             self.remove_password()
 
-    password = property(_get_password, _set_password)
+    passw_hash = property(_get_password, _set_password)
     reset_password = property(_get_reset_password, _set_reset_password)

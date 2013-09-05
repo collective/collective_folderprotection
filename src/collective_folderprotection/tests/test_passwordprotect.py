@@ -96,7 +96,7 @@ class TestPasswordProtect(unittest.TestCase):
         protected = createContentInContainer(self.portal,
                                              'folderish_protected', 
                                              title='Protected',
-                                             password=pw)
+                                             passw_hash=pw)
 
         passwordprotect = IPasswordProtected(protected)
         self.assertTrue(passwordprotect.is_password_protected())

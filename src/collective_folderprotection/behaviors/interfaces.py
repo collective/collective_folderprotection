@@ -17,7 +17,7 @@ from collective_folderprotection import _
 class IPasswordProtected(model.Schema):
     """Behavior interface to enable password protection"""
 
-    password = schema.Password(
+    passw_hash = schema.Password(
             title=_(u"Password"),
             description=_(u"Choose a password to protect this object and, if it is a folder, its children."),
             required=False,
@@ -28,11 +28,11 @@ class IPasswordProtected(model.Schema):
             required=False,
         )
     
-    form.omitted('password')
+    form.omitted('passw_hash')
     form.omitted('reset_password')
-    form.no_omit(IEditForm, 'password')
+    form.no_omit(IEditForm, 'passw_hash')
     form.no_omit(IEditForm, 'reset_password')
-    form.no_omit(IAddForm, 'password')
+    form.no_omit(IAddForm, 'passw_hash')
 
 
 alsoProvides(IPasswordProtected, IFormFieldProvider)

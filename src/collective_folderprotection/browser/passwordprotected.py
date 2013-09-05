@@ -61,7 +61,7 @@ class AskForPasswordView(BrowserView):
                 
                 # If there's no came_from, then just go to the object itself
                 came_from = self.request.get('came_from', '/'.join(self.context.getPhysicalPath()))
-                if passw_hash == passw_behavior.password:
+                if passw_hash == passw_behavior.passw_hash:
                     # The user has entered a valid password, then we store a
                     # random hash with a TTL so we know he already authenticated
                     hashes = ann.get(HASHES_ANNOTATION_KEY, {})
@@ -98,7 +98,7 @@ class AssignPasswordForm(form.Form):
         if errors:
             self.status = _(u"Please correct errors")
             return
-        passw = data.get('password', '')
+        passw = data.get('passw_hash', '')
         reset_passw = data.get('reset_password', '')
         passw_behavior = IPasswordProtected(self.context)
 
