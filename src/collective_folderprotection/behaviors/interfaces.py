@@ -22,9 +22,16 @@ class IPasswordProtected(model.Schema):
             description=_(u"Choose a password to protect this object and, if it is a folder, its children."),
             required=False,
         )
+    reset_password = schema.Bool(
+            title=_(u"Reset password"),
+            description=_(u"Check to remove password protection here."),
+            required=False,
+        )
     
     form.omitted('password')
+    form.omitted('reset_password')
     form.no_omit(IEditForm, 'password')
+    form.no_omit(IEditForm, 'reset_password')
     form.no_omit(IAddForm, 'password')
 
 

@@ -59,6 +59,15 @@ class PasswordProtected(object):
         return self.context.password
 
     def _set_password(self, value):
-        self.assign_password(value)
+        if value:
+            self.assign_password(value)
+
+    def _get_reset_password(self):
+        return False
+
+    def _set_reset_password(self, value):
+        if value:
+            self.remove_password()
 
     password = property(_get_password, _set_password)
+    reset_password = property(_get_reset_password, _set_reset_password)

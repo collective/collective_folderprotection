@@ -99,13 +99,14 @@ class AssignPasswordForm(form.Form):
             self.status = _(u"Please correct errors")
             return
         passw = data.get('password', '')
+        reset_passw = data.get('reset_password', '')
         passw_behavior = IPasswordProtected(self.context)
 
         if passw and passw != '':
             passw_behavior.assign_password(passw)
             self.status = _(u"Password assigned.")
 
-        else:
+        if reset_passw:
             passw_behavior.remove_password()
             self.status = _(u"This content is not going to be password protected.")
 

@@ -56,7 +56,7 @@ If there are 2 protected folders, one with password and the other without, then 
     Page Should Contain Image  xpath=//img[@src="${PLONE_URL}/++resource++resources/lock_locked_16.png"]
     Page Should Contain Image  xpath=//img[@src="${PLONE_URL}/++resource++resources/lock_unlocked_16.png"]
 
-If one assign a blank password, the password protection is removed
+To remove password, check the "Reset password" checkbox
     Goto Homepage
     Log In As Contributor User
     Create Protected Folder  Protected
@@ -67,6 +67,7 @@ If one assign a blank password, the password protection is removed
     Click Button  Save
     Go to   ${protected_folder_url}
     Click Link  link=Assign password
+    Select Checkbox  css=input#form-widgets-reset_password-0
     Click Button  Save
     Page Should Contain  This content is not going to be password protected.
     
