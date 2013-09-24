@@ -82,7 +82,8 @@ class AskForPasswordView(BrowserView):
                 else:
                     # Invalid password, stay here, but mantain the "came_from"
                     self.request.set('came_from', came_from)
-            
+
+        self.request.response.setStatus(401, lock=True)
         return self.index()
 
 
