@@ -14,6 +14,8 @@ from zope.component import getMultiAdapter
 from zope.interface import implements
 from zope.interface import Interface
 
+from DateTime.DateTime import DateTime
+
 from plone.app.layout.icons.icons import CatalogBrainContentIcon
 from plone.app.layout.icons.interfaces import IContentIcon
 
@@ -31,11 +33,7 @@ from collective_folderprotection import _
 class RenderPasswordView(BrowserView):
 
     def __call__(self):
-      
-        if 'VIRTUAL_URL_PARTS' in self.request:
-            self.came_from = self.request.get('VIRTUAL_URL_PARTS')[1]
-        else:
-            self.came_from = self.request.get('PATH_INFO')
+        self.came_from = self.request.get('URL')
 
         self.request.set('came_from', self.came_from)
         # Get the object for which we need to get access to
@@ -58,9 +56,8 @@ class AskForPasswordView(BrowserView):
             if passw_behavior.is_password_protected():
                 # If this is not true, means the Manager has not set a password
                 # for this resource yet, then do not authenticate...
-                
                 # If there's no came_from, then just go to the object itself
-                came_from = self.request.get('came_from', '/'.join(self.context.getPhysicalPath()))
+                came_from = self.request.get('came_from', self.context.absolute_url())
                 if passw_hash == passw_behavior.passw_hash:
                     # The user has entered a valid password, then we store a
                     # random hash with a TTL so we know he already authenticated
@@ -74,10 +71,11 @@ class AskForPasswordView(BrowserView):
                     # Store the hash in the annotation
                     ann[HASHES_ANNOTATION_KEY] = hashes
                     # Save the hash in a cookie
-                    self.request.response.setCookie(HASH_COOKIE_KEY, random_hash)
-                    # Now that we have our cookie set, we can traverse to the object
-                    ob = self.context.restrictedTraverse(came_from)
-                    self.request.response.redirect(ob.absolute_url())
+                    options = {'path': '/'.join(self.context.getPhysicalPath()),
+                               'expires': (DateTime("GMT") + 5).rfc822()}
+                    self.request.response.setCookie(HASH_COOKIE_KEY, random_hash, **options)
+                    # Now that we have our cookie set, go to the original url
+                    self.request.response.redirect(came_from)
                     return
                 else:
                     # Invalid password, stay here, but mantain the "came_from"
