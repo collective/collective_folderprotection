@@ -4,6 +4,8 @@ Changelog
 1.0-dev (unreleased)
 --------------------
 
+- Make Dexterity an optional dependency [frapell]
+
 - Include behavior to prevent removing items from a folderish [frapell]
 
 - Include behavior to prevent renaming items in a folderish (only through UI). [frapell]
