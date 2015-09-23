@@ -20,4 +20,107 @@
    <property name="visible">True</property>
   </object>
  </object>
+
+ <object name="object_buttons" meta_type="CMF Action Category">
+  <property name="title"></property>
+  <object name="enable_password_protect" meta_type="CMF Action"
+     i18n:domain="collective.folderprotection">
+   <property name="title"
+      i18n:translate="">Enable Password Protection</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:${globals_view/getCurrentFolderUrl}/enable_password_protection</property>
+   <property name="link_target"></property>
+   <property
+      name="icon_expr">string:/++resource++resources/lock_locked_16.png</property>
+   <property
+      name="available_expr">python:plone_context_state.canonical_object().restrictedTraverse('@@authorized_to_set_password').can_enable_at_pw_protection()</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="disable_password_protect" meta_type="CMF Action"
+     i18n:domain="collective.folderprotection">
+   <property name="title"
+      i18n:translate="">Disable Password Protection</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:${globals_view/getCurrentFolderUrl}/disable_password_protection</property>
+   <property name="link_target"></property>
+   <property
+      name="icon_expr">string:/++resource++resources/lock_unlocked_16.png</property>
+   <property
+      name="available_expr">python:plone_context_state.canonical_object().restrictedTraverse('@@authorized_to_set_password').can_disable_at_pw_protection()</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="enable_rename_protect" meta_type="CMF Action"
+     i18n:domain="collective.folderprotection">
+   <property name="title"
+      i18n:translate="">Enable Rename Protection</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:${globals_view/getCurrentFolderUrl}/enable_rename_protection</property>
+   <property name="link_target"></property>
+   <property name="icon_expr"></property>
+   <property
+      name="available_expr">python:plone_context_state.canonical_object().restrictedTraverse('@@authorized_to_protect_rename').can_enable_at_rename_protection()</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="disable_rename_protect" meta_type="CMF Action"
+     i18n:domain="collective.folderprotection">
+   <property name="title"
+      i18n:translate="">Disable Rename Protection</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:${globals_view/getCurrentFolderUrl}/disable_rename_protection</property>
+   <property name="link_target"></property>
+   <property name="icon_expr"></property>
+   <property
+      name="available_expr">python:plone_context_state.canonical_object().restrictedTraverse('@@authorized_to_protect_rename').can_disable_at_rename_protection()</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="enable_delete_protect" meta_type="CMF Action"
+     i18n:domain="collective.folderprotection">
+   <property name="title"
+      i18n:translate="">Enable Delete Protection</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:${globals_view/getCurrentFolderUrl}/enable_delete_protection</property>
+   <property name="link_target"></property>
+   <property name="icon_expr"></property>
+   <property
+      name="available_expr">python:plone_context_state.canonical_object().restrictedTraverse('@@authorized_to_protect_delete').can_enable_at_delete_protection()</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="disable_delete_protect" meta_type="CMF Action"
+     i18n:domain="collective.folderprotection">
+   <property name="title"
+      i18n:translate="">Disable Delete Protection</property>
+   <property name="description" i18n:translate=""></property>
+   <property
+      name="url_expr">string:${globals_view/getCurrentFolderUrl}/disable_delete_protection</property>
+   <property name="link_target"></property>
+   <property name="icon_expr"></property>
+   <property
+      name="available_expr">python:plone_context_state.canonical_object().restrictedTraverse('@@authorized_to_protect_delete').can_disable_at_delete_protection()</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+ </object>
+
 </object>
