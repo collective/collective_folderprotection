@@ -11,11 +11,13 @@ This package provides 3 behaviors to secure your Dexterity content types in 3 wa
 
   * "Rename Protection": Intended for folderish content types, this behavior will protect the content's children for being renamed. Note: For this particular behavior, this only protects renaming through the UI, and does not protect the object if it is renamed using manage_renameObjects programatically from its parent.
 
+This functionality is also available in Archetypes items, by enabling them from the "Actions" tab on each item.
+
 
 Installation
 ============
 
-Just add 'collective_folderprotection' to your eggs list in your buildout and re-run buildout.
+Just add 'collective_folderprotection' to your eggs list in your buildout and re-run buildout. The dexterity is included by the use of the 'dexterity' extra, so make sure to include that, or to pull dexterity separatedly.
 
 
 Usage
@@ -31,6 +33,17 @@ If you want to enable them from your type XML, just add any of the following:
   * collective_folderprotection.behaviors.interfaces.IRenameProtected
 
 
+In the case of Archetypes, your content items should provide any of the interfaces below in order to provide the functionality:
+
+  * collective_folderprotection.at.interfaces.IATPasswordProtected
+
+  * collective_folderprotection.at.interfaces.IATDeleteProtected
+
+  * collective_folderprotection.at.interfaces.IATRenameProtected
+
+They can be enabled from the "Actions" drop down manually on specific items. The delete and rename protected functionality can only be enabled in folderish items.
+
+
 Password protection
 ===================
 
@@ -41,6 +54,7 @@ Through the add/edit views
 
 When adding or editing a content type which has the behavior enabled, you should see a new field along the schema, with the "Password" label.
 Enter your password here to assign it. Leave it blank, to remove password protection for this specific object.
+NOTE: This is not available for Archetypes.
 
 Through the "Assign password" view
 ++++++++++++++++++++++++++++++++++
@@ -59,6 +73,23 @@ If you are creating content programatically, you can assign a password when call
     ...
     ...
     createContentInContainer(self.portal, "your.app.dexterity.fti.information", title=title, password=pw)
+
+
+In the case of Archetypes objects, you need to first get the adapter in order to assign a password
+
+
+.. code-block:: python
+
+    from collective_folderprotection.at.interfaces import IATPasswordProtected
+    from zope.interface import alsoProvides
+    from zope.component import queryAdapter
+    ...
+    ...
+    # Make sure obj provides the proper interface
+    alsoProvides(obj, IATPasswordProtected)
+    # Get adapter
+    password_protected = queryAdapter(obj, IATPasswordProtected)
+    password_protected.assign_password("my-password")
 
 
 UI

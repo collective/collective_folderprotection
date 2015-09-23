@@ -2,9 +2,19 @@
 
 from AccessControl.unauthorized import Unauthorized
 
+from collective_folderprotection.at.interfaces import IATDeleteProtected
+from collective_folderprotection.at.interfaces import IATPasswordProtected
 from collective_folderprotection.behaviors.interfaces import IDeleteProtected
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 from collective_folderprotection.exceptions import PasswordProtectedUnauthorized
+from zope.component import queryAdapter
+
+try:
+    from Products.ATContentTypes.interfaces.interfaces import IATContentType
+    from Products.Archetypes.interfaces.base import IBaseFolder
+    HAS_AT = True
+except:
+    HAS_AT = False
 
 
 def checkPassword(portal, request):
@@ -21,14 +31,27 @@ def checkPassword(portal, request):
     ob = portal
     # Now iterate over each one
     for name in full_path.split('/'):
+        authorized = False
+        obj_is_protected = False
         try:
             ob = ob.restrictedTraverse(name)
         except:
             # This path is not traversable or doesn't exist, just ignore
             break
         try:
-            authorized = False
             passwordprotected = IPasswordProtected(ob)
+            obj_is_protected = True
+
+        except TypeError:
+            # Object does not provide behavior, so check if AT
+            if HAS_AT:
+                # This will be true if AT and pw-protected enabled
+                if IATContentType.providedBy(ob) and\
+                   IATPasswordProtected.providedBy(ob):
+                    passwordprotected = queryAdapter(ob, IATPasswordProtected)
+                    obj_is_protected = True
+
+        if obj_is_protected:
             # We are at a content type that is password protected, first check
             # if the password is actually set for this content, and then
             # see if we are not actually at the passwordprompt view
@@ -46,11 +69,9 @@ def checkPassword(portal, request):
                 if not (authorized or passwordprotected.allowed_to_access()):
                     # User is not authorized to access this resource
                     raise PasswordProtectedUnauthorized(name=name)
-        except TypeError:
-            # Object does not provide behavior, so just continue
-            pass
 
     return None
+
 
 def insertCheckPasswordHook(portal, event):
     """ Add this hook to the post_traversal so we can check if some object
@@ -65,5 +86,8 @@ def preventRemove(object, event):
         IDeleteProtected(parent)
         raise Unauthorized()
     except TypeError:
-        # This content type was not protected, so it can be removed
-        pass
+        # Object does not provide behavior, so check if AT
+        if HAS_AT:
+            if IBaseFolder.providedBy(parent) and\
+               IATDeleteProtected.providedBy(parent):
+                raise Unauthorized()

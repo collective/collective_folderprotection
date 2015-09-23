@@ -16,6 +16,12 @@ class CollectivefolderprotectionLayer(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
+        import plone.app.dexterity
+        xmlconfig.file(
+            'configure.zcml',
+            plone.app.dexterity,
+            context=configurationContext
+        )
         import collective_folderprotection
         xmlconfig.file(
             'configure.zcml',

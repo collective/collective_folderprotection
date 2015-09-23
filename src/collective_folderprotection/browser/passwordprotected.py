@@ -3,6 +3,8 @@ from hashlib import md5
 from datetime import datetime
 from random import random
 
+from AccessControl.unauthorized import Unauthorized
+
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form
@@ -10,7 +12,10 @@ from z3c.form import form
 from zope.annotation import IAnnotations
 
 from zope.component import getMultiAdapter
+from zope.component import queryAdapter
 
+from zope.interface import alsoProvides
+from zope.interface import noLongerProvides
 from zope.interface import implements
 from zope.interface import Interface
 
@@ -22,12 +27,20 @@ from plone.app.layout.icons.interfaces import IContentIcon
 from plone.app.z3cform.layout import wrap_form
 
 from Products.Five.browser import BrowserView
+from Products.statusmessages.interfaces import IStatusMessage
 
+from collective_folderprotection.at.interfaces import IATPasswordProtected
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 from collective_folderprotection.config import HASHES_ANNOTATION_KEY
 from collective_folderprotection.config import HASH_COOKIE_KEY
 from collective_folderprotection.config import TIME_TO_LIVE
 from collective_folderprotection import _
+
+try:
+    from Products.ATContentTypes.interfaces.interfaces import IATContentType
+    HAS_AT = True
+except:
+    HAS_AT = False
 
 
 class RenderPasswordView(BrowserView):
@@ -52,13 +65,23 @@ class AskForPasswordView(BrowserView):
             passw = self.request.get('password', '')
             passw_hash = md5(passw).hexdigest()
             ann = IAnnotations(self.context)
-            passw_behavior = IPasswordProtected(self.context)
-            if passw_behavior.is_password_protected():
+
+            try:
+                # This will be true if DX and pw-protected enabled
+                password_protected = IPasswordProtected(self.context)
+            except TypeError:
+                if HAS_AT:
+                    # This will be true if AT and pw-protected enabled
+                    if IATContentType.providedBy(self.context) and\
+                       IATPasswordProtected.providedBy(self.context):
+                        password_protected = queryAdapter(self.context, IATPasswordProtected)
+
+            if password_protected.is_password_protected():
                 # If this is not true, means the Manager has not set a password
                 # for this resource yet, then do not authenticate...
                 # If there's no came_from, then just go to the object itself
                 came_from = self.request.get('came_from', self.context.absolute_url())
-                if passw_hash == passw_behavior.passw_hash:
+                if passw_hash == password_protected.passw_hash:
                     # The user has entered a valid password, then we store a
                     # random hash with a TTL so we know he already authenticated
                     hashes = ann.get(HASHES_ANNOTATION_KEY, {})
@@ -118,24 +141,100 @@ class AssignPasswordForm(form.Form):
 AssignPasswordFormView = wrap_form(AssignPasswordForm)
 
 
+class ATAssignPasswordForm(form.Form):
+
+    fields = field.Fields(IATPasswordProtected)
+
+    ignoreContext = False
+
+    @button.buttonAndHandler(_('Save'), name='save')
+    def save(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = _(u"Please correct errors")
+            return
+        passw = data.get('passw_hash', '')
+        reset_passw = data.get('reset_password', '')
+
+        adapter = queryAdapter(self.context, IATPasswordProtected)
+
+        if passw and passw != '':
+            adapter.assign_password(passw)
+            self.status = _(u"Password assigned.")
+
+        if reset_passw:
+            adapter.remove_password()
+            self.status = _(u"This content is not going to be password protected.")
+
+    @button.buttonAndHandler(_('Cancel'), name='cancel')
+    def cancel(self, action):
+        self.status = _(u"Cancelled.")
+
+ATAssignPasswordFormView = wrap_form(ATAssignPasswordForm)
+
+
 class IAssignPasswordValidation(Interface):
     
     def allowed():
         """ Decide when to show the Assign password tab"""
 
+    def can_disable_at_pw_protection():
+        """ Return True if user is allowed to disable password protection for
+        this object
+        """
+
+    def can_enable_at_pw_protection():
+        """ Return True if user is allowed to enable password protection for
+        this object
+        """
+
 
 class AssignPasswordValidation(BrowserView):
+
+    def can_disable_at_pw_protection(self):
+        can_disable = False
+        if IATContentType.providedBy(self.context) and\
+           IATPasswordProtected.providedBy(self.context):
+            pm = self.context.portal_membership
+            roles = pm.getAuthenticatedMember().getRolesInContext(self.context)
+            if ('Manager' in roles or 'Owner' in roles):
+                can_disable = True
+
+        return can_disable
+
+    def can_enable_at_pw_protection(self):
+        can_enable = False
+        if IATContentType.providedBy(self.context):
+            if not IATPasswordProtected.providedBy(self.context):
+                pm = self.context.portal_membership
+                roles = pm.getAuthenticatedMember().getRolesInContext(self.context)
+                if ('Manager' in roles or 'Owner' in roles):
+                    can_enable = True
+
+        return can_enable
     
     def allowed(self):
+        obj_is_protected = False
         authorized = False
+
+        # First we check if the current context has the password protection enabled
         try:
+            # This will be true if DX and pw-protected enabled
             IPasswordProtected(self.context)
+            obj_is_protected = True
+        except TypeError:
+            if HAS_AT:
+                # This will be true if AT and pw-protected enabled
+                if IATContentType.providedBy(self.context) and\
+                   IATPasswordProtected.providedBy(self.context):
+                    obj_is_protected = True
+
+        if obj_is_protected:
+            # Only allow to set password to Manager or Owner
             pm = self.context.portal_membership
             roles = pm.getAuthenticatedMember().getRolesInContext(self.context)
             if ('Manager' in roles or 'Owner' in roles):
                 authorized = True
-        except TypeError:
-            pass
 
         return authorized
 
@@ -147,24 +246,34 @@ class PasswordProtectedIcon(CatalogBrainContentIcon):
         self.context = context
         self.request = request
         self.brain = brain
-        self.has_behavior_enabled = False
+        self.has_protection_enabled = False
         self.is_protected = False
         
         portal_types = self.context.portal_types
         portal_type = self.brain.portal_type
         behaviors = getattr(portal_types[portal_type], 'behaviors', None)
+
         if (behaviors and
             'collective_folderprotection.behaviors.interfaces.IPasswordProtected' in behaviors):
-            self.has_behavior_enabled = True
+            self.has_protection_enabled = True
             ob = self.brain.getObject()
             passwordprotected = IPasswordProtected(ob)
             
             if passwordprotected.is_password_protected():
                 self.is_protected = True
+        else:
+            ob = self.brain.getObject()
+            if IATContentType.providedBy(ob) and\
+               IATPasswordProtected.providedBy(ob):
+                self.has_protection_enabled = True
+                ob = self.brain.getObject()
+                adapter = queryAdapter(ob, IATPasswordProtected)
+                if adapter.is_password_protected():
+                    self.is_protected = True
 
     @property
     def url(self):
-        if not self.has_behavior_enabled:
+        if not self.has_protection_enabled:
             return super(PasswordProtectedIcon, self).url
         
         if self.is_protected:
@@ -179,10 +288,44 @@ class PasswordProtectedIcon(CatalogBrainContentIcon):
 
     @property
     def description(self):
-        if not self.has_behavior_enabled:
+        if not self.has_protection_enabled:
             return super(PasswordProtectedIcon, self).description
           
         if self.is_protected:
             return "%s protected by password." % self.brain['portal_type']
         else:
             return "%s not protected by password." % self.brain['portal_type']
+
+
+class EnableATPasswordProtection(BrowserView):
+
+    def __call__(self):
+        if IATContentType.providedBy(self.context) and not\
+           IATPasswordProtected.providedBy(self.context):
+            pm = self.context.portal_membership
+            roles = pm.getAuthenticatedMember().getRolesInContext(self.context)
+            if not ('Manager' in roles or 'Owner' in roles):
+                raise Unauthorized("You are not authorized to enable password protection for this item")
+
+            alsoProvides(self.context, IATPasswordProtected)
+            messages = IStatusMessage(self.request)
+            messages.add(_(u"Password protection has been enabled"), type=u"info")
+
+        self.request.response.redirect(self.context.absolute_url())
+
+
+class DisableATPasswordProtection(BrowserView):
+
+    def __call__(self):
+        if IATContentType.providedBy(self.context) and\
+           IATPasswordProtected.providedBy(self.context):
+            pm = self.context.portal_membership
+            roles = pm.getAuthenticatedMember().getRolesInContext(self.context)
+            if not ('Manager' in roles or 'Owner' in roles):
+                raise Unauthorized("You are not authorized to disable password protection for this item")
+
+            noLongerProvides(self.context, IATPasswordProtected)
+            messages = IStatusMessage(self.request)
+            messages.add(_(u"Password protection has been disabled"), type=u"info")
+
+        self.request.response.redirect(self.context.absolute_url())

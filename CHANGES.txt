@@ -4,6 +4,8 @@ Changelog
 1.0-dev (unreleased)
 --------------------
 
+- Add support for Archetypes [frapell]
+
 - Make Dexterity an optional dependency [frapell]
 
 - Include behavior to prevent removing items from a folderish [frapell]
