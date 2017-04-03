@@ -64,47 +64,73 @@ class AskForPasswordView(BrowserView):
             # The password was submitted
             passw = self.request.get('password', '')
             passw_hash = md5(passw).hexdigest()
-            ann = IAnnotations(self.context)
+
+            password_protected = None
+
+            context = self.context
 
             try:
                 # This will be true if DX and pw-protected enabled
-                password_protected = IPasswordProtected(self.context)
+                password_protected = IPasswordProtected(context)
             except TypeError:
                 if HAS_AT:
                     # This will be true if AT and pw-protected enabled
-                    if IATContentType.providedBy(self.context) and\
-                       IATPasswordProtected.providedBy(self.context):
-                        password_protected = queryAdapter(self.context, IATPasswordProtected)
+                    if IATContentType.providedBy(context) and\
+                       IATPasswordProtected.providedBy(context):
+                        password_protected = queryAdapter(context, IATPasswordProtected)
 
-            if password_protected.is_password_protected():
-                # If this is not true, means the Manager has not set a password
-                # for this resource yet, then do not authenticate...
-                # If there's no came_from, then just go to the object itself
-                came_from = self.request.get('came_from', self.context.absolute_url())
-                if passw_hash == password_protected.passw_hash:
-                    # The user has entered a valid password, then we store a
-                    # random hash with a TTL so we know he already authenticated
-                    hashes = ann.get(HASHES_ANNOTATION_KEY, {})
-                    random_hash = md5(str(random())).hexdigest()
-                    while random_hash in hashes:
-                        # This would be *REALLY* hard to happen, but just in case...
+            if not password_protected:
+                # It could be that this is the default view for the protected parent, so let's try that
+                parent_dp = context.aq_parent.getDefaultPage()
+                if parent_dp == context.id:
+                    context = context.aq_parent
+
+                    try:
+                        # This will be true if DX and pw-protected enabled
+                        password_protected = IPasswordProtected(context)
+                    except TypeError:
+                        if HAS_AT:
+                            # This will be true if AT and pw-protected enabled
+                            if IATContentType.providedBy(context) and \
+                                    IATPasswordProtected.providedBy(context):
+                                password_protected = queryAdapter(context, IATPasswordProtected)
+
+            if password_protected:
+                if password_protected.is_password_protected():
+                    # If this is not true, means the Manager has not set a password
+                    # for this resource yet, then do not authenticate...
+                    # If there's no came_from, then just go to the object itself
+                    came_from = self.request.get('came_from', context.absolute_url())
+                    if passw_hash == password_protected.passw_hash:
+                        # The user has entered a valid password, then we store a
+                        # random hash with a TTL so we know he already authenticated
+                        ann = IAnnotations(context)
+                        hashes = ann.get(HASHES_ANNOTATION_KEY, {})
                         random_hash = md5(str(random())).hexdigest()
+                        while random_hash in hashes:
+                            # This would be *REALLY* hard to happen, but just in case...
+                            random_hash = md5(str(random())).hexdigest()
 
-                    hashes[random_hash] = datetime.now() + TIME_TO_LIVE
-                    # Store the hash in the annotation
-                    ann[HASHES_ANNOTATION_KEY] = hashes
-                    # Save the hash in a cookie
-                    path = self.context.getPhysicalPath()
-                    virtual_path = self.request.physicalPathToVirtualPath(path)
-                    options = {'path': '/'.join(('',)+virtual_path),
-                               'expires': (DateTime("GMT") + 5).rfc822()}
-                    self.request.response.setCookie(HASH_COOKIE_KEY, random_hash, **options)
-                    # Now that we have our cookie set, go to the original url
-                    self.request.response.redirect(came_from)
-                    return
-                else:
-                    # Invalid password, stay here, but mantain the "came_from"
-                    self.request.set('came_from', came_from)
+                        hashes[random_hash] = datetime.now() + TIME_TO_LIVE
+                        # Store the hash in the annotation
+                        ann[HASHES_ANNOTATION_KEY] = hashes
+                        if context is not self.context:
+                            # Also store the hash in the default view object, if that's the case
+                            ann = IAnnotations(self.context)
+                            ann[HASHES_ANNOTATION_KEY] = hashes
+
+                        # Save the hash in a cookie
+                        path = context.getPhysicalPath()
+                        virtual_path = self.request.physicalPathToVirtualPath(path)
+                        options = {'path': '/'.join(('',)+virtual_path),
+                                   'expires': (DateTime("GMT") + 5).rfc822()}
+                        self.request.response.setCookie(HASH_COOKIE_KEY, random_hash, **options)
+                        # Now that we have our cookie set, go to the original url
+                        self.request.response.redirect(came_from)
+                        return
+                    else:
+                        # Invalid password, stay here, but mantain the "came_from"
+                        self.request.set('came_from', came_from)
 
         self.request.response.setStatus(401, lock=True)
         return self.index()
