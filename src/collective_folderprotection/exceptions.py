@@ -1,14 +1,15 @@
-
-from zope.interface import implements
+import six
+from zope.interface import implementer
 from zope.interface.common.interfaces import IException
+
 
 class IPasswordProtectedUnauthorized(IException):
     """
     """
 
 
+@implementer(IPasswordProtectedUnauthorized)
 class PasswordProtectedUnauthorized(Exception):
-    implements(IPasswordProtectedUnauthorized)
     
     def _get_message(self):
         return self._message
@@ -36,8 +37,9 @@ class PasswordProtectedUnauthorized(Exception):
                     % self.name)
         return repr(self)
 
-    def __unicode__(self):
-        result = self.__str__()
-        if isinstance(result, unicode):
-            return result
-        return unicode(result, 'ascii') # override sys.getdefaultencoding()
+    if six.PY2:
+        def __unicode__(self):
+            result = self.__str__()
+            if isinstance(result, unicode):
+                return result
+            return unicode(result, 'ascii') # override sys.getdefaultencoding()

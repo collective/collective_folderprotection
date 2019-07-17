@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import six
 from datetime import datetime
 from hashlib import md5
 
@@ -35,7 +36,10 @@ class PasswordProtected(object):
 
         if passw:
             # If there's a password, assign it
-            passw_hash = md5(passw).hexdigest()
+            if six.PY3:
+                passw_hash = md5(passw.encode()).hexdigest()
+            else:
+                passw_hash = md5(passw).hexdigest()
             if HASHES_ANNOTATION_KEY in ann:
                 # Remove old storde hashes
                 del ann[HASHES_ANNOTATION_KEY]

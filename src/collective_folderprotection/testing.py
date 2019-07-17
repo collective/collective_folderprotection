@@ -29,13 +29,6 @@ class CollectivefolderprotectionLayer(PloneSandboxLayer):
             context=configurationContext
         )
 
-        # Install products that use an old-style initialize() function
-        #z2.installProduct(app, 'Products.PloneFormGen')
-
-#    def tearDownZope(self, app):
-#        # Uninstall products installed above
-#        z2.uninstallProduct(app, 'Products.PloneFormGen')
-
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'collective_folderprotection:test_fixture')
         

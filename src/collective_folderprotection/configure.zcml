@@ -10,7 +10,6 @@
 
   <includeDependencies package="." />
 
-  <include package=".at" />
   <include package=".behaviors" />
   <include package=".browser" />
 
@@ -33,7 +32,7 @@
     
     <subscriber handler=".events.insertCheckPasswordHook"
         for="Products.CMFCore.interfaces.ISiteRoot
-             zope.app.publication.interfaces.IBeforeTraverseEvent"
+             zope.traversing.interfaces.IBeforeTraverseEvent"
         />
 
     <subscriber handler=".events.preventRemove"

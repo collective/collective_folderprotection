@@ -1,6 +1,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="colelctive.folderprotection">
 
     <!-- Page to handle the password protected folders -->
@@ -29,82 +30,10 @@
         />
 
     <browser:page
-        for="Products.ATContentTypes.interfaces.interfaces.IATContentType"
-        name="assignpassword"
-        class=".passwordprotected.ATAssignPasswordFormView"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="Products.ATContentTypes.interfaces.interfaces.IATContentType"
-        name="enable_password_protection"
-        class=".passwordprotected.EnableATPasswordProtection"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="Products.ATContentTypes.interfaces.interfaces.IATContentType"
-        name="disable_password_protection"
-        class=".passwordprotected.DisableATPasswordProtection"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="Products.Archetypes.interfaces.base.IBaseFolder"
-        name="enable_rename_protection"
-        class=".rename_protected.EnableATRenameProtection"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="Products.Archetypes.interfaces.base.IBaseFolder"
-        name="disable_rename_protection"
-        class=".rename_protected.DisableATRenameProtection"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="Products.Archetypes.interfaces.base.IBaseFolder"
-        name="enable_delete_protection"
-        class=".del_protected.EnableATDeleteProtection"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="Products.Archetypes.interfaces.base.IBaseFolder"
-        name="disable_delete_protection"
-        class=".del_protected.DisableATDeleteProtection"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="*"
-        name="authorized_to_protect_delete"
-        class=".del_protected.DeleteValidation"
-        allowed_interface=".del_protected.IDeleteValidation"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="*"
-        name="authorized_to_protect_rename"
-        class=".rename_protected.RenameValidation"
-        allowed_interface=".rename_protected.IRenameValidation"
-        permission="zope2.View"
-        />
-
-    <browser:page
         for="*"
         name="authorized_to_set_password"
         class=".passwordprotected.AssignPasswordValidation"
         allowed_interface=".passwordprotected.IAssignPasswordValidation"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="*"
-        name="object_rename"
-        class=".rename_protected.ObjectRenameView"
         permission="zope2.View"
         />
 

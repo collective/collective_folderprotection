@@ -2,19 +2,9 @@
 
 from AccessControl.unauthorized import Unauthorized
 
-from collective_folderprotection.at.interfaces import IATDeleteProtected
-from collective_folderprotection.at.interfaces import IATPasswordProtected
 from collective_folderprotection.behaviors.interfaces import IDeleteProtected
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 from collective_folderprotection.exceptions import PasswordProtectedUnauthorized
-from zope.component import queryAdapter
-
-try:
-    from Products.ATContentTypes.interfaces.interfaces import IATContentType
-    from Products.Archetypes.interfaces.base import IBaseFolder
-    HAS_AT = True
-except:
-    HAS_AT = False
 
 
 def checkPassword(portal, request):
@@ -43,13 +33,7 @@ def checkPassword(portal, request):
             obj_is_protected = True
 
         except TypeError:
-            # Object does not provide behavior, so check if AT
-            if HAS_AT:
-                # This will be true if AT and pw-protected enabled
-                if IATContentType.providedBy(ob) and\
-                   IATPasswordProtected.providedBy(ob):
-                    passwordprotected = queryAdapter(ob, IATPasswordProtected)
-                    obj_is_protected = True
+            pass
 
         if obj_is_protected:
             # We are at a content type that is password protected, first check
@@ -86,8 +70,4 @@ def preventRemove(object, event):
         IDeleteProtected(parent)
         raise Unauthorized()
     except TypeError:
-        # Object does not provide behavior, so check if AT
-        if HAS_AT:
-            if IBaseFolder.providedBy(parent) and\
-               IATDeleteProtected.providedBy(parent):
-                raise Unauthorized()
+        pass
