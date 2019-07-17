@@ -61,7 +61,10 @@ def insertCheckPasswordHook(portal, event):
     """ Add this hook to the post_traversal so we can check if some object
     during the traversal needs a password
     """
-    event.request.post_traverse(checkPassword, (portal, event.request))
+    try:
+        event.request.post_traverse(checkPassword, (portal, event.request))
+    except RuntimeError:
+        pass
 
 
 def preventRemove(object, event):
