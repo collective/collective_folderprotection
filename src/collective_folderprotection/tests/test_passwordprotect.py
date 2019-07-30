@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from datetime import timedelta
-import unittest2 as unittest
+import unittest
 
 from zope.annotation import IAnnotations
 

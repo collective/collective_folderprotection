@@ -16,20 +16,15 @@ class CollectivefolderprotectionLayer(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
-        import plone.app.dexterity
-        xmlconfig.file(
-            'configure.zcml',
-            plone.app.dexterity,
-            context=configurationContext
-        )
+        import plone.app.contenttypes
+        self.loadZCML(package=plone.app.contenttypes)
         import collective_folderprotection
-        xmlconfig.file(
-            'configure.zcml',
-            collective_folderprotection,
-            context=configurationContext
-        )
+        self.loadZCML(package=collective_folderprotection)
+        import Products.CMFQuickInstallerTool
+        self.loadZCML(package=Products.CMFQuickInstallerTool)
 
     def setUpPloneSite(self, portal):
+        applyProfile(portal, 'plone.app.contenttypes:default')
         applyProfile(portal, 'collective_folderprotection:test_fixture')
         
         # Create a manager user
