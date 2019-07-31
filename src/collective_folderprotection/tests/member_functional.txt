@@ -9,25 +9,27 @@ Suite Teardown  Close All Browsers
 
 *** Variables ***
 
-${BROWSER} =  firefox
+${BROWSER} =  headlessfirefox
 
 *** Test Cases ***
 
 Member can access a folder that was not given a password
-    Goto Homepage
+    Go to homepage
     Log In As Site Owner
     Create Protected Folder  Protected
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Not Contain  This resource is password protected
 
 Member can access protected folder after providing password
-    Goto Homepage
+    Go to homepage
     Log In As Site Owner
     Create Protected Folder  Protected
     Click Link  link=Assign password
     Input Text  css=input#form-widgets-passw_hash  thepassword
     Click Button  Save
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Contain  This resource is password protected
@@ -36,7 +38,7 @@ Member can access protected folder after providing password
     Page Should Not Contain  This resource is password protected
     
 Member should be redirected to the inner content where he requested access in the first place
-    Goto Homepage
+    Go to homepage
     Log In As Site Owner
     Create Protected Folder  Protected
     Click Link  link=Assign password
@@ -44,6 +46,7 @@ Member should be redirected to the inner content where he requested access in th
     Click Button  Save
     Go to   ${protected_folder_url}
     Create Page  A Page  This is an internal page
+    Custom Log out
     Log In As Test User
     Go to   ${internal_protected}
     Page Should Contain  This resource is password protected
@@ -53,17 +56,18 @@ Member should be redirected to the inner content where he requested access in th
     Page Should Contain  This is an internal page
     
 Member can still access a folder that is not protected
-    Goto Homepage
+    Go to homepage
     Log In As Site Owner
     Create Not Protected Folder  Not-Protected
     Create Page  A Page  This is an internal page
+    Custom Log out
     Log In As Test User
     Go to   ${internal_not_protected}
     Page Should Not Contain  This resource is password protected
     Page Should Contain  This is an internal page
 
 After a first attempt, Member should still be redirected to the inner content where he requested access in the first place
-    Goto Homepage
+    Go to homepage
     Log In As Site Owner
     Create Protected Folder  Protected
     Click Link  link=Assign password
@@ -71,6 +75,7 @@ After a first attempt, Member should still be redirected to the inner content wh
     Click Button  Save
     Go to   ${protected_folder_url}
     Create Page  A Page  This is an internal page
+    Custom Log out
     Log In As Test User
     Go to   ${internal_protected}
     Page Should Contain  This resource is password protected
@@ -83,76 +88,86 @@ After a first attempt, Member should still be redirected to the inner content wh
     Page Should Contain  This is an internal page
 
 Password can be set from the add view
-    Goto Homepage
+    Go to homepage
     Log In As Site Owner
     Click Add Folderish Protected
     Input Text  css=input#form-widgets-IDublinCore-title  Protected
     Input Text  css=input#form-widgets-IPasswordProtected-passw_hash  thepassword
     Click Button  Save
     Page Should Contain  Item created
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Contain  This resource is password protected
 
 Password can be set from the edit view
-    Goto Homepage
+    Go to homepage
     Log In As Site Owner
     Click Add Folderish Protected
     Input Text  css=input#form-widgets-IDublinCore-title  Protected
     Click Button  Save
     Page Should Contain  Item created
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Not Contain  This resource is password protected
+    Custom Log out
     Log In As Site Owner
     Go to   ${protected_folder_url}
     Click Link  link=Edit    
     Input Text  css=input#form-widgets-IPasswordProtected-passw_hash  thepassword
     Click Button  Save
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Contain  This resource is password protected
 
 Password can be removed from the edit view
-    Goto Homepage
+    Go to homepage
     Log In As Site Owner
     Click Add Folderish Protected
     Input Text  css=input#form-widgets-IDublinCore-title  Protected
     Click Button  Save
     Page Should Contain  Item created
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Not Contain  This resource is password protected
+    Custom Log out
     Log In As Site Owner
     Go to   ${protected_folder_url}
     Click Link  link=Edit    
     Select Checkbox  css=input#form-widgets-IPasswordProtected-reset_password-0
     Click Button  Save
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Not Contain  This resource is password protected
 
 Password can be removed from the Assign password view
-    Goto Homepage
+    Go to homepage
     Log In As Site Owner
     Click Add Folderish Protected
     Input Text  css=input#form-widgets-IDublinCore-title  Protected
     Click Button  Save
     Page Should Contain  Item created
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Not Contain  This resource is password protected
+    Custom Log out
     Log In As Site Owner
     Go to   ${protected_folder_url}
     Click Link  link=Assign password
     Select Checkbox  css=input#form-widgets-reset_password-0
     Click Button  Save
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Not Contain  This resource is password protected
 
 If password field is left empty, the password should not change
-    Goto Homepage
+    Go to homepage
     Log In As Contributor User
     Create Protected Folder  Protected
     Go to   ${PLONE_URL}/folder_contents
@@ -164,6 +179,7 @@ If password field is left empty, the password should not change
     Click Link  link=Assign password
     Click Button  Save
     Page Should Not Contain  This content is not going to be password protected.
+    Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
     Page Should Contain  This resource is password protected

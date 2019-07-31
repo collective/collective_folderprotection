@@ -20,6 +20,8 @@ class CollectivefolderprotectionLayer(PloneSandboxLayer):
         self.loadZCML(package=plone.app.contenttypes)
         import collective_folderprotection
         self.loadZCML(package=collective_folderprotection)
+        self.loadZCML(package=collective_folderprotection,
+                      name='overrides.zcml')
         import Products.CMFQuickInstallerTool
         self.loadZCML(package=Products.CMFQuickInstallerTool)
 
