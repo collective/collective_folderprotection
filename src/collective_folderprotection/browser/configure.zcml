@@ -45,6 +45,21 @@
                   Products.ZCatalog.interfaces.ICatalogBrain"
            factory=".passwordprotected.PasswordProtectedIcon"
            provides="plone.app.layout.icons.interfaces.IContentIcon" />
- 
+
+    <browser:page
+        for="*"
+        name="object_rename"
+        class=".rename_protected.RenameForm"
+        layer="collective_folderprotection.interfaces.IFolderProtectLayer"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.CMFCore.interfaces._content.IFolderish"
+        name="fc-rename"
+        class=".rename_protected.RenameActionView"
+        layer="collective_folderprotection.interfaces.IFolderProtectLayer"
+        permission="cmf.ListFolderContents"
+        />
  
 </configure>

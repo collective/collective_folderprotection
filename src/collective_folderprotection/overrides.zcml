@@ -5,18 +5,4 @@
     xmlns:plone="http://namespaces.plone.org/plone"
     xmlns:five="http://namespaces.zope.org/five">
 
-  <browser:page
-    for="*"
-    name="object_rename"
-    class=".browser.rename_protected.RenameForm"
-    permission="cmf.ModifyPortalContent"
-    />
-
-  <browser:page
-    for="Products.CMFCore.interfaces._content.IFolderish"
-    name="fc-rename"
-    class=".browser.rename_protected.RenameActionView"
-    permission="cmf.ListFolderContents"
-    />
-
 </configure>
