@@ -1,0 +1,39 @@
+language: python
+python:
+  - 2.7.15
+  - 3.6
+  - 3.7
+cache:
+  pip: true
+  directories:
+    - eggs
+dist: bionic
+env:
+  - PLONE_VERSION=5.0.x
+  - PLONE_VERSION=5.1.x
+  - PLONE_VERSION=5.2.x
+matrix:
+  fast_finish: true
+  exclude:
+    - python: 3.6
+      env: PLONE_VERSION=5.0.x
+    - python: 3.6
+      env: PLONE_VERSION=5.1.x
+    - python: 3.7
+      env: PLONE_VERSION=5.0.x
+    - python: 3.7
+      env: PLONE_VERSION=5.1.x
+before_install:
+  - pip install -r requirements.txt
+install:
+  - sed -ie "s#plone-x.x.x.cfg#plone-$PLONE_VERSION.cfg#" travis.cfg
+  - buildout -N -t 3 -c travis.cfg
+before_script:
+  - export ROBOT_SELENIUM2LIBRARY_RUN_ON_FAILURE="Capture Page Screenshot"
+script:
+  - bin/code-analysis
+  - bin/test
+  - bin/test-coverage
+after_success:
+  - pip install -q coveralls
+  - coveralls

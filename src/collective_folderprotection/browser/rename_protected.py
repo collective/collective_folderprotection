@@ -18,18 +18,38 @@ class RenameForm(BaseRenameForm):
 
     @button.buttonAndHandler(PloneMessageFactory(u'Rename'), name='Rename')
     def handle_rename(self, action):
-        parent = aq_parent(aq_inner(self.context))
-        try:
-            IRenameProtected(parent)
-            IStatusMessage(self.request).add(
-                _(u'You are not allowed to rename items in this folder'),
-                type='error'
-            )
-            raise Unauthorized(_(u'You are not allowed to rename items in this '
-                                 u'folder'))
-        except TypeError:
-            pass
+        # First check if the object itself is protected
+        adapter = IRenameProtected(self.context, None)
+        if adapter:
+            if adapter.rename_protection:
+                IStatusMessage(self.request).add(
+                    _(u'This item is protected against being renamed'),
+                    type='error'
+                )
+                raise Unauthorized(
+                    _(u'This item is protected against being renamed')
+                )
+        else:
+            # Check with the parent
+            parent = aq_parent(aq_inner(self.context))
+            adapter = IRenameProtected(parent, None)
+            if adapter:
+                if adapter.rename_protection:
+                    IStatusMessage(self.request).add(
+                        _(u'This folder is protected against renaming '
+                          u'items inside of it.'),
+                        type='error'
+                    )
+                    raise Unauthorized(
+                        _(u'This folder is protected against renaming '
+                          u'items inside of it.')
+                    )
         return super(RenameForm, self).handle_rename(self, action)
+
+    @button.buttonAndHandler(PloneMessageFactory(u'label_cancel', default=u'Cancel'),
+                             name='Cancel')
+    def handle_cancel(self, action):
+        self.request.response.redirect(self.view_url())
 
 
 class RenameActionView(BaseRenameActionView):
@@ -38,21 +58,38 @@ class RenameActionView(BaseRenameActionView):
         self.errors = list()
         context = aq_inner(self.context)
         catalog = getToolByName(context, 'portal_catalog')
-        try:
-            for key in self.request.form.keys():
-                if not key.startswith('UID_'):
-                    continue
-                uid = self.request.form[key]
-                brains = catalog.searchResults(UID=uid, show_inactive=True)
-                if len(brains) == 0:
-                    continue
-                obj = brains[0].getObject()
+
+        for key in self.request.form.keys():
+            if not key.startswith('UID_'):
+                continue
+            uid = self.request.form[key]
+            brains = catalog.searchResults(UID=uid, show_inactive=True)
+            if len(brains) == 0:
+                continue
+            obj = brains[0].getObject()
+
+            # First check if the object itself is protected
+            adapter = IRenameProtected(obj, None)
+            if adapter:
+                if adapter.rename_protection:
+                    msgid = _(u"protected_item_rename",
+                              default=(
+                                  u"Item ${title} is protected against "
+                                  u"being renamed"
+                              ),
+                              mapping={u"title": obj.Title()})
+                    self.errors.append(msgid)
+                    return self.message(list())
+            else:
+                # Check with the parent
                 parent = aq_parent(aq_inner(obj))
-                IRenameProtected(parent)
-                self.errors.append(_(u'You are not allowed to rename items in '
-                                     u'this folder.'))
-                return self.message(list())
-        except TypeError:
-            pass
+                adapter = IRenameProtected(parent, None)
+                if adapter:
+                    if adapter.rename_protection:
+                        self.errors.append(
+                            _(u'This folder is protected against renaming '
+                              u'items inside of it.')
+                        )
+                        return self.message(list())
 
         return super(RenameActionView, self).__call__()

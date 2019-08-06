@@ -61,5 +61,13 @@
         layer="collective_folderprotection.interfaces.IFolderProtectLayer"
         permission="cmf.ListFolderContents"
         />
- 
+
+    <browser:page
+        for="Products.CMFCore.interfaces._content.IFolderish"
+        name="fc-delete"
+        class=".delete_protected.DeleteActionView"
+        layer="collective_folderprotection.interfaces.IFolderProtectLayer"
+        permission="cmf.ListFolderContents"
+        />
+
 </configure>

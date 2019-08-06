@@ -37,9 +37,45 @@ class IPasswordProtected(model.Schema):
 alsoProvides(IPasswordProtected, IFormFieldProvider)
 
 
-class IDeleteProtected(Interface):
+class IDeleteProtected(model.Schema):
     """Marker interface to enable delete protection behavior"""
 
+    delete_protection = schema.Bool(
+        title=_(u"Delete protection"),
+        description=_(
+            u"Mark this checkbox if you want to protect this object, and its "
+            u"children (if this is a folder) from being deleted. NOTE: In "
+            u"folders, the delete protection will only protect direct "
+            u"children, it will not recurse into subfolders."
+        ),
+        required=False,
+    )
 
-class IRenameProtected(Interface):
+    form.omitted('delete_protection')
+    form.no_omit(IEditForm, 'delete_protection')
+    form.no_omit(IAddForm, 'delete_protection')
+
+
+alsoProvides(IDeleteProtected, IFormFieldProvider)
+
+
+class IRenameProtected(model.Schema):
     """Marker interface to enable rename protection behavior"""
+
+    rename_protection = schema.Bool(
+        title=_(u"Rename protection"),
+        description=_(
+            u"Mark this checkbox if you want to protect this object, and its "
+            u"children (if this is a folder) from being renamed. NOTE: In "
+            u"folders, the rename protection will only protect direct "
+            u"children, it will not recurse into subfolders."
+        ),
+        required=False,
+    )
+
+    form.omitted('rename_protection')
+    form.no_omit(IEditForm, 'rename_protection')
+    form.no_omit(IAddForm, 'rename_protection')
+
+
+alsoProvides(IRenameProtected, IFormFieldProvider)

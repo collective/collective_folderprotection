@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from  collective_folderprotection.testing import COLLECTIVE_FOLDERPROTECTION_FUNCTIONAL_TESTING
+from collective_folderprotection.testing import COLLECTIVE_FOLDERPROTECTION_FUNCTIONAL_TESTING
 from plone.testing import layered
 import robotsuite
 import unittest

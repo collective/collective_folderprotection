@@ -40,6 +40,11 @@
              OFS.interfaces.IObjectWillBeRemovedEvent"
         />
 
+    <subscriber handler=".events.preventRename"
+        for="*
+             OFS.interfaces.IObjectWillBeMovedEvent"
+        />
+
   <browser:resourceDirectory
       name="resources"
       directory="static" />

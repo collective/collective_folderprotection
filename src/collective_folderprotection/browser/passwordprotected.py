@@ -59,23 +59,15 @@ class AskForPasswordView(BrowserView):
 
             context = self.context
 
-            try:
-                # This will be true if DX and pw-protected enabled
-                password_protected = IPasswordProtected(context)
-            except TypeError:
-                pass
-
+            # This will be true if DX and pw-protected enabled
+            password_protected = IPasswordProtected(context, None)
             if not password_protected:
                 # It could be that this is the default view for the protected parent, so let's try that
                 parent_dp = context.aq_parent.getDefaultPage()
                 if parent_dp == context.id:
                     context = context.aq_parent
-
-                    try:
-                        # This will be true if DX and pw-protected enabled
-                        password_protected = IPasswordProtected(context)
-                    except TypeError:
-                        pass
+                    # This will be true if DX and pw-protected enabled
+                    password_protected = IPasswordProtected(context, None)
 
             if password_protected:
                 if password_protected.is_password_protected():

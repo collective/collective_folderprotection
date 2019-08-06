@@ -4,7 +4,10 @@ from AccessControl.unauthorized import Unauthorized
 
 from collective_folderprotection.behaviors.interfaces import IDeleteProtected
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
+from collective_folderprotection.behaviors.interfaces import IRenameProtected
 from collective_folderprotection.exceptions import PasswordProtectedUnauthorized
+
+from OFS.event import ObjectWillBeMovedEvent
 
 
 def checkPassword(portal, request):
@@ -68,9 +71,37 @@ def insertCheckPasswordHook(portal, event):
 
 
 def preventRemove(object, event):
-    parent = event.oldParent
-    try:
-        IDeleteProtected(parent)
-        raise Unauthorized()
-    except TypeError:
-        pass
+    # First check if the object itself is protected
+    adapter = IDeleteProtected(object, None)
+    if adapter:
+        if adapter.delete_protection:
+            raise Unauthorized()
+    else:
+        # Check with the parent
+        parent = event.oldParent
+        adapter = IDeleteProtected(parent, None)
+        if adapter:
+            if adapter.delete_protection:
+                raise Unauthorized()
+
+
+def preventRename(object, event):
+    # ObjectWillBeMovedEvent is a base class of ObjectWillBeAddedEvent, so we
+    # use type() to be sure we only check ObjectWillBeMovedEvent
+    if type(event) is not ObjectWillBeMovedEvent:
+        return
+    # Only check for items that remain in the same folder, with different
+    # name (ie. renamed)
+    if event.oldParent is event.newParent and event.oldName != event.newName:
+        # First check if the object itself is protected
+        adapter = IRenameProtected(object, None)
+        if adapter:
+            if adapter.rename_protection:
+                raise Unauthorized()
+        else:
+            # Check with the parent
+            parent = event.oldParent
+            adapter = IRenameProtected(parent, None)
+            if adapter:
+                if adapter.rename_protection:
+                    raise Unauthorized()

@@ -39,10 +39,14 @@ class TestPasswordProtect(unittest.TestCase):
                                                'folderish_protected', 
                                                title='Protected')
 
+    def test_not_enabled_by_default(self):
+        passwordprotect = IPasswordProtected(self.folder)
+        self.assertFalse(passwordprotect.is_password_protected())
+
     def test_not_allowed_if_cookie_not_present(self):
         passwordprotect = IPasswordProtected(self.folder)
         self.assertFalse(passwordprotect.allowed_to_access())
-        
+
     def test_not_allowed_if_expired_hash(self):
         # Let's create a hash and put it in the cookie and the annotation
         pw_hash = 'this-is-the-hash'
@@ -65,7 +69,7 @@ class TestPasswordProtect(unittest.TestCase):
         ann = IAnnotations(self.folder)
         hashes = ann.get(HASHES_ANNOTATION_KEY, {})
         
-        # We will put the time 10 day in the future, so it would be valid
+        # We will put the time 10 days in the future, so it would be valid
         hashes[pw_hash] = datetime.now() + timedelta(days=10)
         
         ann[HASHES_ANNOTATION_KEY] = hashes
@@ -90,7 +94,7 @@ class TestPasswordProtect(unittest.TestCase):
         passwordprotect.remove_password()
         self.assertFalse(passwordprotect.is_password_protected())
 
-    def test_set_password_on_creationg(self):
+    def test_set_password_on_creation(self):
         pw = 'this-is-the-pw'
 
         protected = createContentInContainer(self.portal,

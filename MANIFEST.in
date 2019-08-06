@@ -1,0 +1,9 @@
+recursive-include src/collective_folderprotection *
+include *
+global-exclude *.pyc
+exclude .installed.cfg
+exclude .mr.developer.cfg
+exclude .coverage
+exclude geckodriver-v*
+exclude travis.cfge
+exclude lib64

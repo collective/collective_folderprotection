@@ -9,21 +9,19 @@ Suite Teardown  Close All Browsers
 
 *** Variables ***
 
-${BROWSER} =  headlessfirefox
-
 *** Test Cases ***
 
 Owner should be allowed to access protected folder
     Go to homepage
     Log In As Contributor User
-    Create Protected Folder  Protected
+    Create Protected Folder Disabled  Protected
     Go to   ${protected_folder_url}
     Page Should Not Contain  This resource is password protected
 
 Owner should be able to access the 'Assign password' view
     Go to homepage
     Log In As Contributor User
-    Create Protected Folder  Protected
+    Create Protected Folder Disabled  Protected
     Go to   ${protected_folder_url}
     Page Should Contain  Assign password
     Click Link  link=Assign password
@@ -60,9 +58,7 @@ Owner should not see the 'Assign password' view for a not protected folder
 To remove password, check the "Reset password" checkbox
     Go to homepage
     Log In As Contributor User
-    Create Protected Folder  Protected
-    Go to   ${PLONE_URL}/folder_contents
-    Go to   ${protected_folder_url}
+    Create Protected Folder Disabled  Protected
     Click Link  link=Assign password
     Input Text  css=input#form-widgets-passw_hash  thepassword
     Click Button  Save

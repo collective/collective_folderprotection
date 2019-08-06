@@ -9,14 +9,12 @@ Suite Teardown  Close All Browsers
 
 *** Variables ***
 
-${BROWSER} =  headlessfirefox
-
 *** Test Cases ***
 
 Member can access a folder that was not given a password
     Go to homepage
     Log In As Site Owner
-    Create Protected Folder  Protected
+    Create Protected Folder Disabled  Protected
     Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
@@ -25,10 +23,7 @@ Member can access a folder that was not given a password
 Member can access protected folder after providing password
     Go to homepage
     Log In As Site Owner
-    Create Protected Folder  Protected
-    Click Link  link=Assign password
-    Input Text  css=input#form-widgets-passw_hash  thepassword
-    Click Button  Save
+    Create Password Protected Folder  Protected  thepassword
     Custom Log out
     Log In As Test User
     Go to   ${protected_folder_url}
@@ -40,10 +35,7 @@ Member can access protected folder after providing password
 Member should be redirected to the inner content where he requested access in the first place
     Go to homepage
     Log In As Site Owner
-    Create Protected Folder  Protected
-    Click Link  link=Assign password
-    Input Text  css=input#form-widgets-passw_hash  thepassword
-    Click Button  Save
+    Create Password Protected Folder  Protected  thepassword
     Go to   ${protected_folder_url}
     Create Page  A Page  This is an internal page
     Custom Log out
@@ -58,7 +50,7 @@ Member should be redirected to the inner content where he requested access in th
 Member can still access a folder that is not protected
     Go to homepage
     Log In As Site Owner
-    Create Not Protected Folder  Not-Protected
+    Create Protected Folder Disabled  Not-Protected
     Create Page  A Page  This is an internal page
     Custom Log out
     Log In As Test User
@@ -69,10 +61,7 @@ Member can still access a folder that is not protected
 After a first attempt, Member should still be redirected to the inner content where he requested access in the first place
     Go to homepage
     Log In As Site Owner
-    Create Protected Folder  Protected
-    Click Link  link=Assign password
-    Input Text  css=input#form-widgets-passw_hash  thepassword
-    Click Button  Save
+    Create Password Protected Folder  Protected  thepassword
     Go to   ${protected_folder_url}
     Create Page  A Page  This is an internal page
     Custom Log out
@@ -169,12 +158,7 @@ Password can be removed from the Assign password view
 If password field is left empty, the password should not change
     Go to homepage
     Log In As Contributor User
-    Create Protected Folder  Protected
-    Go to   ${PLONE_URL}/folder_contents
-    Go to   ${protected_folder_url}
-    Click Link  link=Assign password
-    Input Text  css=input#form-widgets-passw_hash  thepassword
-    Click Button  Save
+    Create Password Protected Folder  Protected  thepassword
     Go to   ${protected_folder_url}
     Click Link  link=Assign password
     Click Button  Save
