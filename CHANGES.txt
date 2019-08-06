@@ -2,13 +2,14 @@ Changelog
 =========
 
 2.0.1 (unreleased)
-------------------
+++++++++++++++++++
 
-- Nothing changed yet.
+- Fix rst format for pkg description
+  [frapell]
 
 
 2.0 (2019-08-06)
-----------------
+++++++++++++++++
 
 - As of this version, this product only supports Plone 5.0+
 
@@ -30,7 +31,7 @@ Changelog
 
 
 1.0-dev (unreleased)
---------------------
+++++++++++++++++++++
 
 - Add support for Archetypes [frapell]
 
