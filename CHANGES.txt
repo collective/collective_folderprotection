@@ -8,7 +8,7 @@ Changelog
   [enfold-josh]
 
 - Support Python 3 and Plone 5.2
-  [enfold-josh]
+  [enfold-josh,frapell]
 
 - Catch exception raised when inserting post_traverse hook during a
   non-publishing traversal.
