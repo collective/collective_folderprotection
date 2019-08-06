@@ -11,9 +11,12 @@ dist: bionic
 addons:
   firefox: 68.0.1
 env:
-  - PLONE_VERSION=5.0.x
-  - PLONE_VERSION=5.1.x
-  - PLONE_VERSION=5.2.x
+  global:
+    - MOZ_HEADLESS=1
+  matrix:
+    - PLONE_VERSION=5.0.x
+    - PLONE_VERSION=5.1.x
+    - PLONE_VERSION=5.2.x
 matrix:
   fast_finish: true
   exclude:
