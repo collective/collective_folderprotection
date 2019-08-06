@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0 (unreleased)
+2.0 (2019-08-06)
 ----------------
 
 - As of this version, this product only supports Plone 5.0+
