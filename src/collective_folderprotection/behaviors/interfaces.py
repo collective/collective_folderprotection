@@ -1,9 +1,7 @@
-
 from z3c.form.interfaces import IEditForm, IAddForm
 
 from zope import schema
 from zope.interface import alsoProvides
-from zope.interface import Interface
 
 from plone.autoform import directives as form
 from plone.autoform.interfaces import IFormFieldProvider
@@ -17,21 +15,24 @@ class IPasswordProtected(model.Schema):
     """Behavior interface to enable password protection"""
 
     passw_hash = schema.Password(
-            title=_(u"Password"),
-            description=_(u"Choose a password to protect this object and, if it is a folder, its children."),
-            required=False,
-        )
+        title=_(u"Password"),
+        description=_(
+            u"Choose a password to protect this object and, if it is a "
+            u"folder, its children."
+        ),
+        required=False,
+    )
     reset_password = schema.Bool(
-            title=_(u"Reset password"),
-            description=_(u"Check to remove password protection here."),
-            required=False,
-        )
-    
-    form.omitted('passw_hash')
-    form.omitted('reset_password')
-    form.no_omit(IEditForm, 'passw_hash')
-    form.no_omit(IEditForm, 'reset_password')
-    form.no_omit(IAddForm, 'passw_hash')
+        title=_(u"Reset password"),
+        description=_(u"Check to remove password protection here."),
+        required=False,
+    )
+
+    form.omitted("passw_hash")
+    form.omitted("reset_password")
+    form.no_omit(IEditForm, "passw_hash")
+    form.no_omit(IEditForm, "reset_password")
+    form.no_omit(IAddForm, "passw_hash")
 
 
 alsoProvides(IPasswordProtected, IFormFieldProvider)
@@ -51,9 +52,9 @@ class IDeleteProtected(model.Schema):
         required=False,
     )
 
-    form.omitted('delete_protection')
-    form.no_omit(IEditForm, 'delete_protection')
-    form.no_omit(IAddForm, 'delete_protection')
+    form.omitted("delete_protection")
+    form.no_omit(IEditForm, "delete_protection")
+    form.no_omit(IAddForm, "delete_protection")
 
 
 alsoProvides(IDeleteProtected, IFormFieldProvider)
@@ -73,9 +74,9 @@ class IRenameProtected(model.Schema):
         required=False,
     )
 
-    form.omitted('rename_protection')
-    form.no_omit(IEditForm, 'rename_protection')
-    form.no_omit(IAddForm, 'rename_protection')
+    form.omitted("rename_protection")
+    form.no_omit(IEditForm, "rename_protection")
+    form.no_omit(IAddForm, "rename_protection")
 
 
 alsoProvides(IRenameProtected, IFormFieldProvider)

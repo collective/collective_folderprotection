@@ -9,6 +9,8 @@
 .mr.developer.cfg
 .project
 .pydevproject
+lib64
+pyvenv.cfg
 .settings/
 bin/
 coverage/

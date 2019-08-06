@@ -10,11 +10,10 @@ class IPasswordProtectedUnauthorized(IException):
 
 @implementer(IPasswordProtectedUnauthorized)
 class PasswordProtectedUnauthorized(Exception):
-    
     def _get_message(self):
         return self._message
 
-    message = property(_get_message,)
+    message = property(_get_message)
 
     def __init__(self, message=None, name=None):
         """Possible signatures:
@@ -26,20 +25,22 @@ class PasswordProtectedUnauthorized(Exception):
 
         """
 
-        self.name=name
-        self._message=message
+        self.name = name
+        self._message = message
 
     def __str__(self):
         if self.message is not None:
             return self.message
         if self.name is not None:
-            return ("You need a password to access '%s'"
-                    % self.name)
+            return "You need a password to access '%s'" % self.name
         return repr(self)
 
     if six.PY2:
+
         def __unicode__(self):
             result = self.__str__()
-            if isinstance(result, unicode):
+            if isinstance(result, unicode):  # noqa: F821
                 return result
-            return unicode(result, 'ascii') # override sys.getdefaultencoding()
+            return unicode(  # noqa: F821
+                result, "ascii"
+            )  # override sys.getdefaultencoding()

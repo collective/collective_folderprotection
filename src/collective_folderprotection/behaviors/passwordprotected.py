@@ -10,12 +10,11 @@ from collective_folderprotection.config import HASH_COOKIE_KEY
 
 
 class PasswordProtected(object):
-
     def __init__(self, context):
         self.context = context
 
     def is_password_protected(self):
-        return getattr(self.context, 'passw_hash', False)
+        return getattr(self.context, "passw_hash", False)
 
     def allowed_to_access(self):
         allowed = False

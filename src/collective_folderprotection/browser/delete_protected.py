@@ -3,8 +3,9 @@
 from Acquisition import aq_inner
 from collective_folderprotection import _
 from collective_folderprotection.behaviors.interfaces import IDeleteProtected
-from plone.app.content.browser.contents.delete import DeleteActionView \
-    as BaseDeleteActionView
+from plone.app.content.browser.contents.delete import (
+    DeleteActionView as BaseDeleteActionView,
+)
 from plone.app.uuid.utils import uuidToCatalogBrain
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import PloneMessageFactory
@@ -23,45 +24,45 @@ FOLDER_PROTECTED_TEMPLATE = """
 
 
 class DeleteActionView(BaseDeleteActionView):
-
     def __call__(self, keep_selection_order=False):
         self.protect()
         self.errors = list()
-        if self.request.form.get('render') == 'yes':
-            confirm_view = getMultiAdapter((getSite(), self.request),
-                                           name='delete_confirmation_info')
+        if self.request.form.get("render") == "yes":
+            confirm_view = getMultiAdapter(
+                (getSite(), self.request), name="delete_confirmation_info"
+            )
             selection = self.get_selection()
             self.request.response.setHeader(
-                'Content-Type', 'application/json; charset=utf-8'
+                "Content-Type", "application/json; charset=utf-8"
             )
             # Check the current folder allows to remove items
             adapter = IDeleteProtected(self.context, None)
             if adapter:
                 if adapter.delete_protection:
                     self.errors.append(
-                        _(u'This folder is protected against deleting '
-                          u'items inside of it.')
+                        _(
+                            u"This folder is protected against deleting "
+                            u"items inside of it."
+                        )
                     )
-                    return json.dumps({
-                        'html': FOLDER_PROTECTED_TEMPLATE
-                    })
+                    return json.dumps({"html": FOLDER_PROTECTED_TEMPLATE})
 
-            catalog = getToolByName(self.context, 'portal_catalog')
+            catalog = getToolByName(self.context, "portal_catalog")
             brains = catalog(UID=selection, show_inactive=True)
             items = [i.getObject() for i in brains]
             self.request.response.setHeader(
-                'Content-Type', 'application/json; charset=utf-8'
+                "Content-Type", "application/json; charset=utf-8"
             )
-            return json.dumps({
-                'html': confirm_view(items)
-            })
+            return json.dumps({"html": confirm_view(items)})
         else:
             context = aq_inner(self.context)
             selection = self.get_selection()
 
-            parts = str(self.request.form.get('folder', '').lstrip('/')).split('/')
+            parts = str(self.request.form.get("folder", "").lstrip("/")).split(
+                "/"
+            )
             if parts:
-                parent = self.site.unrestrictedTraverse('/'.join(parts[:-1]))
+                parent = self.site.unrestrictedTraverse("/".join(parts[:-1]))
                 self.dest = parent.restrictedTraverse(parts[-1])
 
             # Check the current folder allows to remove items
@@ -69,13 +70,15 @@ class DeleteActionView(BaseDeleteActionView):
             if adapter:
                 if adapter.delete_protection:
                     self.errors.append(
-                        _(u'This folder is protected against deleting '
-                          u'items inside of it.')
+                        _(
+                            u"This folder is protected against deleting "
+                            u"items inside of it."
+                        )
                     )
                     return self.message(list())
 
-            self.catalog = getToolByName(context, 'portal_catalog')
-            self.mtool = getToolByName(self.context, 'portal_membership')
+            self.catalog = getToolByName(context, "portal_catalog")
+            self.mtool = getToolByName(self.context, "portal_membership")
 
             brains = []
             if keep_selection_order:
@@ -95,26 +98,29 @@ class DeleteActionView(BaseDeleteActionView):
                 adapter = IDeleteProtected(obj, None)
                 if adapter:
                     if adapter.delete_protection:
-                        msgid = _(u"protected_item_delete",
-                                  default=(
-                                      u"Item ${title} is protected against "
-                                      u"being deleted"
-                                  ),
-                                  mapping={u"title": obj.Title()})
+                        msgid = _(
+                            u"protected_item_delete",
+                            default=(
+                                u"Item ${title} is protected against "
+                                u"being deleted"
+                            ),
+                            mapping={u"title": obj.Title()},
+                        )
                         self.errors.append(msgid)
                         return self.message(list())
 
                 if (
-                        self.required_obj_permission
-                        and not self.mtool.checkPermission(
-                    self.required_obj_permission,
-                    obj
-                )
+                    self.required_obj_permission
+                    and not self.mtool.checkPermission(
+                        self.required_obj_permission, obj
+                    )
                 ):
-                    self.errors.append(PloneMessageFactory(
-                        'Permission denied for "${title}"',
-                        mapping={'title': self.objectTitle(obj)}
-                    ))
+                    self.errors.append(
+                        PloneMessageFactory(
+                            'Permission denied for "${title}"',
+                            mapping={"title": self.objectTitle(obj)},
+                        )
+                    )
                     continue
                 self.action(obj)
 

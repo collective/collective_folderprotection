@@ -1,6 +1,7 @@
 # -*- extra stuff goes here -*-
 from zope.i18nmessageid import MessageFactory
-_ = MessageFactory('collective_folderprotection')
+
+_ = MessageFactory("collective_folderprotection")
 
 
 def initialize(context):
