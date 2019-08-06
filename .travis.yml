@@ -8,6 +8,8 @@ cache:
   directories:
     - eggs
 dist: bionic
+addons:
+  firefox: 68.0.1
 env:
   - PLONE_VERSION=5.0.x
   - PLONE_VERSION=5.1.x
