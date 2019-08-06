@@ -62,8 +62,12 @@ If you are creating content programatically, you can assign a password when call
     createContentInContainer(self.portal, "your.app.dexterity.fti.information", title=title, password=pw)
 
 
+Delete protection
+=================
 
-UI
-==
+When the behavior is enabled for a given content type, a new checkbox will be shown in both the add and the edit screens, when creating or editing that specific content type. Marking the checkbox will protect this element and its direct children (if this is a folderish type) from being deleted.
 
-When going to the "Contents" view (folder_contents), you should now see a new icon for objects with the "Password protected" behavior enabled. You should see a closed black lock for protected objects (ie. they have a password set), and an opened black lock, for not protected objects (ie. they do not have a password set).
+Rename protection
+=================
+
+When the behavior is enabled for a given content type, a new checkbox will be shown in both the add and the edit screens, when creating or editing that specific content type. Marking the checkbox will protect this element and its direct children (if this is a folderish type) from being renamed.

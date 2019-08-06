@@ -4,6 +4,8 @@ Changelog
 2.0 (unreleased)
 ----------------
 
+- As of this version, this product only supports Plone 5.0+
+
 - Remove support for Archetypes
   [enfold-josh]
 
