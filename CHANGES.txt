@@ -1,6 +1,26 @@
 Changelog
 =========
 
+2.0 (unreleased)
+----------------
+
+- Remove support for Archetypes
+  [enfold-josh]
+
+- Support Python 3 and Plone 5.2
+  [enfold-josh,frapell]
+
+- Catch exception raised when inserting post_traverse hook during a
+  non-publishing traversal.
+  [enfold-josh]
+
+- Fix tests.
+  [enfold-josh]
+
+- Change functional test files extensions to .robot
+  [enfold-josh]
+
+
 1.0-dev (unreleased)
 --------------------
 

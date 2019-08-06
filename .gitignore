@@ -9,6 +9,8 @@
 .mr.developer.cfg
 .project
 .pydevproject
+lib64
+pyvenv.cfg
 .settings/
 bin/
 coverage/
@@ -30,3 +32,5 @@ Paste-2.0.2-py2.6.egg/
 PasteDeploy-1.5.2-py2.6.egg/
 PasteScript-2.0.2-py2.6.egg/
 six-1.9.0-py2.6.egg/
+local/
+share/
