@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.1 (unreleased)
+2.0.1 (2019-08-06)
 ++++++++++++++++++
 
 - Fix rst format for pkg description
