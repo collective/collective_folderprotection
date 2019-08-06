@@ -1,6 +1,6 @@
 *** Settings ***
 
-Library  Selenium2Library  timeout=5 seconds  implicit_wait=0.5 seconds
+Library  Selenium2Library  timeout=10 seconds  implicit_wait=1 seconds
 Resource  keywords.robot
 Variables  plone/app/testing/interfaces.py
 
