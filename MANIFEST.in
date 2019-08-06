@@ -1,4 +1,6 @@
 recursive-include src/collective_folderprotection *
+recursive-include docs *.GPL
+recursive-include docs *.txt
 include *
 global-exclude *.pyc
 exclude .installed.cfg
