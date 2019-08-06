@@ -6,7 +6,7 @@ Resource  plone/app/robotframework/keywords.robot
 
 ${ZOPE_URL} =  http://${ZOPE_HOST}:${ZOPE_PORT}
 ${PLONE_URL} =  ${ZOPE_URL}/plone
-${BROWSER} =  headlessfirefox
+${BROWSER} =  Firefox
 
 ${protected_folder_url} =  ${PLONE_URL}/protected
 ${internal_protected} =  ${protected_folder_url}/a-page
