@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from AccessControl.unauthorized import Unauthorized
-
+from collective_folderprotection import _
 from collective_folderprotection.behaviors.interfaces import IDeleteProtected
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 from collective_folderprotection.behaviors.interfaces import IRenameProtected
 from collective_folderprotection.exceptions import (
     PasswordProtectedUnauthorized,
+    DeleteProtectionException,
+    RenameProtectionException,
 )
 
 from OFS.event import ObjectWillBeMovedEvent
+from Products.statusmessages.interfaces import IStatusMessage
+from plone import api
 
 
 def checkPassword(portal, request):
@@ -77,16 +80,20 @@ def insertCheckPasswordHook(portal, event):
 def preventRemove(object, event):
     # First check if the object itself is protected
     adapter = IDeleteProtected(object, None)
+    req = api.env.getRequest()
+    messages = IStatusMessage(req)
     if adapter:
         if adapter.delete_protection:
-            raise Unauthorized()
+            messages.add(_(u"Item cannot be deleted because it is protected."), type=u"error")
+            raise DeleteProtectionException()
     else:
         # Check with the parent
         parent = event.oldParent
         adapter = IDeleteProtected(parent, None)
         if adapter:
             if adapter.delete_protection:
-                raise Unauthorized()
+                messages.add(_(u"Item cannot be deleted because its parent folder is protected."), type=u"error")
+                raise DeleteProtectionException()
 
 
 def preventRename(object, event):
@@ -96,16 +103,24 @@ def preventRename(object, event):
         return
     # Only check for items that remain in the same folder, with different
     # name (ie. renamed)
+    req = api.env.getRequest()
+    messages = IStatusMessage(req)
+    import pdb;pdb.set_trace()
     if event.oldParent is event.newParent and event.oldName != event.newName:
         # First check if the object itself is protected
         adapter = IRenameProtected(object, None)
         if adapter:
             if adapter.rename_protection:
-                raise Unauthorized()
+                messages.add(_(u"This item is protected against being renamed"), type=u"error")
+                raise RenameProtectionException()
         else:
             # Check with the parent
             parent = event.oldParent
             adapter = IRenameProtected(parent, None)
             if adapter:
                 if adapter.rename_protection:
-                    raise Unauthorized()
+                    messages.add(_(
+                            u"This folder is protected against renaming "
+                            u"items inside of it."
+                        ), type=u"error")
+                    raise RenameProtectionException()

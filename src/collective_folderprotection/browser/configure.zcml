@@ -63,11 +63,27 @@
         />
 
     <browser:page
+        name="index.html"
+        for="collective_folderprotection.exceptions.IRenameProtectionException"
+        class=".rename_protected.RenameProtectedView"
+        layer="collective_folderprotection.interfaces.IFolderProtectLayer"
+        permission="zope2.View"
+        />
+
+    <browser:page
         for="Products.CMFCore.interfaces._content.IFolderish"
         name="fc-delete"
         class=".delete_protected.DeleteActionView"
         layer="collective_folderprotection.interfaces.IFolderProtectLayer"
         permission="cmf.ListFolderContents"
+        />
+
+    <browser:page
+        name="index.html"
+        for="collective_folderprotection.exceptions.IDeleteProtectionException"
+        class=".delete_protected.DeleteProtectedView"
+        layer="collective_folderprotection.interfaces.IFolderProtectLayer"
+        permission="zope2.View"
         />
 
 </configure>

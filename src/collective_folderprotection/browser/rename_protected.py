@@ -2,7 +2,6 @@
 
 from .. import _
 from ..behaviors.interfaces import IRenameProtected
-from AccessControl import Unauthorized
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from plone.app.content.browser.actions import RenameForm as BaseRenameForm
@@ -11,6 +10,7 @@ from plone.app.content.browser.contents.rename import (
 )
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import PloneMessageFactory
+from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form import button
 
@@ -19,6 +19,7 @@ class RenameForm(BaseRenameForm):
     @button.buttonAndHandler(PloneMessageFactory(u"Rename"), name="Rename")
     def handle_rename(self, action):
         # First check if the object itself is protected
+        protected = False
         adapter = IRenameProtected(self.context, None)
         if adapter:
             if adapter.rename_protection:
@@ -26,9 +27,7 @@ class RenameForm(BaseRenameForm):
                     _(u"This item is protected against being renamed"),
                     type="error",
                 )
-                raise Unauthorized(
-                    _(u"This item is protected against being renamed")
-                )
+                protected = True
         else:
             # Check with the parent
             parent = aq_parent(aq_inner(self.context))
@@ -42,13 +41,11 @@ class RenameForm(BaseRenameForm):
                         ),
                         type="error",
                     )
-                    raise Unauthorized(
-                        _(
-                            u"This folder is protected against renaming "
-                            u"items inside of it."
-                        )
-                    )
-        return super(RenameForm, self).handle_rename(self, action)
+                    protected = True
+        if protected:
+            self.request.response.redirect(self.context.absolute_url())
+        else:
+            return super(RenameForm, self).handle_rename(self, action)
 
     @button.buttonAndHandler(
         PloneMessageFactory(u"label_cancel", default=u"Cancel"), name="Cancel"
@@ -101,3 +98,12 @@ class RenameActionView(BaseRenameActionView):
                         return self.message(list())
 
         return super(RenameActionView, self).__call__()
+
+
+class RenameProtectedView(BrowserView):
+
+    def __call__(self):
+        # XXX: We cannot simply redirect from here
+        # See more: ZPublisher/WSGIPublisher.py(141)_exc_view_created_response()
+        self.request.response.setStatus(200)
+        return self.__parent__()

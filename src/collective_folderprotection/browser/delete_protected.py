@@ -9,6 +9,7 @@ from plone.app.content.browser.contents.delete import (
 from plone.app.uuid.utils import uuidToCatalogBrain
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import PloneMessageFactory
+from Products.Five import BrowserView
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
 
@@ -126,3 +127,12 @@ class DeleteActionView(BaseDeleteActionView):
 
             self.finish()
             return self.message(selection)
+
+
+class DeleteProtectedView(BrowserView):
+
+    def __call__(self):
+        # XXX: We cannot simply redirect from here
+        # See more: ZPublisher/WSGIPublisher.py(141)_exc_view_created_response()
+        self.request.response.setStatus(200)
+        return self.__parent__()

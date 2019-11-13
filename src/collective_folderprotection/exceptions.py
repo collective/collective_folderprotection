@@ -8,6 +8,18 @@ class IPasswordProtectedUnauthorized(IException):
     """
 
 
+class IDeleteProtectionException(IException):
+    """
+    an exception raised when a delete protected folder is attempted to be deleted
+    """
+
+
+class IRenameProtectionException(IException):
+    """
+    an exception raised when a rename protected folder is attempted to be renamed
+    """
+
+
 @implementer(IPasswordProtectedUnauthorized)
 class PasswordProtectedUnauthorized(Exception):
     def _get_message(self):
@@ -44,3 +56,15 @@ class PasswordProtectedUnauthorized(Exception):
             return unicode(  # noqa: F821
                 result, "ascii"
             )  # override sys.getdefaultencoding()
+
+
+@implementer(IDeleteProtectionException)
+class DeleteProtectionException(Exception):
+    """
+    """
+
+
+@implementer(IRenameProtectionException)
+class RenameProtectionException(Exception):
+    """
+    """
