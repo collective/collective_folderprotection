@@ -4,7 +4,11 @@ Changelog
 2.0.2 (unreleased)
 ++++++++++++++++++
 
-- Nothing changed yet.
+- Raise exceptions if a protected item is renamed or deleted
+  [frapell]
+
+- Include uninstall profile and add post_install routines to ignore exceptions
+  [frapell]
 
 
 2.0.1 (2019-08-06)
