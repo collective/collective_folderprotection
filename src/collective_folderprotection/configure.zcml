@@ -19,6 +19,7 @@
       directory="profiles/default"
       description="Installs the collective_folderprotection package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.post_install"
       />
       
   <genericsetup:registerProfile
@@ -28,6 +29,21 @@
       description="Test fixture for the collective_folderprotection package (Do not install)"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
+
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="collective_folderprotection (uninstall)"
+      directory="profiles/uninstall"
+      description="Uninstalls the collective_folderprotection add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.post_uninstall"
+      />
+
+  <utility
+      factory=".setuphandlers.HiddenProfiles"
+      name="collective_folderprotection-hiddenprofiles"
+      />
+
   <!-- -*- extra stuff goes here -*- -->
     
     <subscriber handler=".events.insertCheckPasswordHook"
