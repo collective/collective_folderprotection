@@ -105,7 +105,6 @@ def preventRename(object, event):
     # name (ie. renamed)
     req = api.env.getRequest()
     messages = IStatusMessage(req)
-    import pdb;pdb.set_trace()
     if event.oldParent is event.newParent and event.oldName != event.newName:
         # First check if the object itself is protected
         adapter = IRenameProtected(object, None)
