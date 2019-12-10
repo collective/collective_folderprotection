@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.2 (unreleased)
+2.1 (2019-12-10)
 ++++++++++++++++++
 
 - Raise exceptions if a protected item is renamed or deleted
