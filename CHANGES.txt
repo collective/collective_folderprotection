@@ -4,6 +4,9 @@ Changelog
 1.0-dev (unreleased)
 --------------------
 
+- Support accessing sub folders in a password protected folder.
+  [enfold-josh]
+
 - Add support for Archetypes [frapell]
 
 - Make Dexterity an optional dependency [frapell]

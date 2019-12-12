@@ -35,6 +35,7 @@ def checkPassword(portal, request):
         obj_is_protected = False
         try:
             ob = ob.restrictedTraverse(name)
+            path = '/'.join(ob.getPhysicalPath())
         except:
             # This path is not traversable or doesn't exist, just ignore
             break
@@ -68,7 +69,7 @@ def checkPassword(portal, request):
 
                 if not (authorized or passwordprotected.allowed_to_access()):
                     # User is not authorized to access this resource
-                    raise PasswordProtectedUnauthorized(name=name)
+                    raise PasswordProtectedUnauthorized(path)
 
     return None
 

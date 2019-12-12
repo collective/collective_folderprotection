@@ -50,11 +50,11 @@ class RenderPasswordView(BrowserView):
 
         self.request.set('came_from', self.came_from)
         # Get the object for which we need to get access to
-        ob = getattr(self.__parent__, self.context.name)
+        ob = self.__parent__.restrictedTraverse(self.context.path)
         prompt = getMultiAdapter((ob, self.request), name="passwordprompt")
         return prompt()
-      
-      
+
+
 class AskForPasswordView(BrowserView):
     """
     """

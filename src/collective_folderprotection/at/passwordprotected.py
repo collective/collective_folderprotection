@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Acquisition import aq_base
 from datetime import datetime
 from hashlib import md5
 
@@ -14,7 +15,7 @@ class PasswordProtected(object):
         self.context = context
 
     def is_password_protected(self):
-        return getattr(self.context, 'passw_hash', False)
+        return getattr(aq_base(self.context), 'passw_hash', False)
 
     def allowed_to_access(self):
         allowed = False

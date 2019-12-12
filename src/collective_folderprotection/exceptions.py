@@ -15,25 +15,23 @@ class PasswordProtectedUnauthorized(Exception):
 
     message = property(_get_message,)
 
-    def __init__(self, message=None, name=None):
+    def __init__(self, path, message=None):
         """Possible signatures:
 
-        PasswordProtectedUnauthorized()
-        PasswordProtectedUnauthorized(message)
-        PasswordProtectedUnauthorized(name)
-        PasswordProtectedUnauthorized(message, name)
+        PasswordProtectedUnauthorized(path)
+        PasswordProtectedUnauthorized(path, message)
 
         """
 
-        self.name=name
-        self._message=message
+        self.path = path
+        self._message = message
 
     def __str__(self):
         if self.message is not None:
             return self.message
-        if self.name is not None:
+        if self.path is not None:
             return ("You need a password to access '%s'"
-                    % self.name)
+                    % self.path)
         return repr(self)
 
     def __unicode__(self):
