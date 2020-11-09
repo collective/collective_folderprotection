@@ -135,11 +135,24 @@ class AskForPasswordView(BrowserView):
         return self.index()
 
 
+def pw_protected(form):
+    passw_behavior = IPasswordProtected(form.context)
+    return passw_behavior.is_password_protected()
+
+
 class AssignPasswordForm(form.Form):
 
     fields = field.Fields(IPasswordProtected)
 
     ignoreContext = False
+
+    def updateActions(self):
+        super(AssignPasswordForm, self).updateActions()
+        if "remove_pw" in self.actions:
+            self.actions["remove_pw"].addClass("btn-danger")
+        if "save" in self.actions:
+            self.actions["save"].addClass("btn-success")
+
 
     @button.buttonAndHandler(_("Save"), name="save")
     def save(self, action):
@@ -148,22 +161,33 @@ class AssignPasswordForm(form.Form):
             self.status = _(u"Please correct errors")
             return
         passw = data.get("passw_hash", "")
-        reset_passw = data.get("reset_password", "")
+        passw_reason = data.get("passw_reason", "")
         passw_behavior = IPasswordProtected(self.context)
 
         if passw and passw != "":
             passw_behavior.assign_password(passw)
             self.status = _(u"Password assigned.")
 
-        if reset_passw:
-            passw_behavior.remove_password()
-            self.status = _(
-                u"This content is not going to be password protected."
-            )
+        if passw_reason:
+            passw_behavior.passw_reason = passw_reason
+        else:
+            passw_behavior.passw_reason = u""
+        self.request.response.redirect(self.context.absolute_url())
+
 
     @button.buttonAndHandler(_("Cancel"), name="cancel")
     def cancel(self, action):
         self.status = _(u"Cancelled.")
+
+
+    @button.buttonAndHandler(_("Remove Password Protection"), name="remove_pw", condition=pw_protected)
+    def remove_pw(self, action):
+        passw_behavior = IPasswordProtected(self.context)
+        passw_behavior.remove_password()
+        self.status = _(
+            u"Password protection removed from this location."
+        )
+        self.request.response.redirect(self.context.absolute_url())
 
 
 AssignPasswordFormView = wrap_form(AssignPasswordForm)

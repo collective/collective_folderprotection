@@ -4,7 +4,24 @@ Changelog
 2.2 (unreleased)
 ++++++++++++++++
 
-- Nothing changed yet.
+- Remove the password protection field from the edit and add forms, to avoid
+  issues with browsers password auto-fill causing issues
+  [frapell]
+
+- Create a new password widget to use the autocomplete attribute in the
+  <input> field, to prevent browser auto filling passwords
+  [frapell]
+
+- Replace the checkbox to clear password protection with a clear red button
+  [frapell]
+
+- Include a viewlet that will show up when the given folder or a parent folder
+  is password protected
+  [frapell]
+
+- Include a richtext field to provide the ability to include a reason on why
+  the folder is password protected
+  [frapell]
 
 
 2.1 (2019-12-10)

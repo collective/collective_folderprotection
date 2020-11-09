@@ -40,7 +40,7 @@ class PasswordProtected(object):
             else:
                 passw_hash = md5(passw).hexdigest()
             if HASHES_ANNOTATION_KEY in ann:
-                # Remove old storde hashes
+                # Remove old stored hashes
                 del ann[HASHES_ANNOTATION_KEY]
 
             self.context.passw_hash = passw_hash
@@ -65,12 +65,11 @@ class PasswordProtected(object):
         if value:
             self.assign_password(value)
 
-    def _get_reset_password(self):
-        return False
+    def _get_passw_reason(self):
+        return self.context.passw_reason
 
-    def _set_reset_password(self, value):
-        if value:
-            self.remove_password()
+    def _set_passw_reason(self, value):
+        self.context.passw_reason = value
 
     passw_hash = property(_get_password, _set_password)
-    reset_password = property(_get_reset_password, _set_reset_password)
+    passw_reason = property(_get_passw_reason, _set_passw_reason)

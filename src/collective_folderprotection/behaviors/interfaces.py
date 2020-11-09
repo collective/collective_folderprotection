@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
 from z3c.form.interfaces import IEditForm, IAddForm
 
 from zope import schema
 from zope.interface import alsoProvides
 
+from plone.app.textfield import RichText as RichTextField
+from plone.app.z3cform.widget import RichTextFieldWidget
 from plone.autoform import directives as form
 from plone.autoform.interfaces import IFormFieldProvider
 
@@ -22,17 +25,19 @@ class IPasswordProtected(model.Schema):
         ),
         required=False,
     )
-    reset_password = schema.Bool(
-        title=_(u"Reset password"),
-        description=_(u"Check to remove password protection here."),
+
+    passw_reason = RichTextField(
+        title=_(u'Reason'),
+        description=_(
+            u"You can add a reason on why this folder is being protected "
+            u"by a password."
+        ),
         required=False,
     )
+    form.widget('passw_reason', RichTextFieldWidget)
 
     form.omitted("passw_hash")
-    form.omitted("reset_password")
-    form.no_omit(IEditForm, "passw_hash")
-    form.no_omit(IEditForm, "reset_password")
-    form.no_omit(IAddForm, "passw_hash")
+    form.omitted("passw_reason")
 
 
 alsoProvides(IPasswordProtected, IFormFieldProvider)
