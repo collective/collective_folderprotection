@@ -18,6 +18,7 @@ from DateTime.DateTime import DateTime
 
 from plone.app.layout.icons.icons import CatalogBrainContentIcon
 from plone.app.layout.icons.interfaces import IContentIcon
+from plone.app.textfield.interfaces import IRichTextValue
 
 from plone.app.z3cform.layout import wrap_form
 
@@ -44,8 +45,29 @@ class RenderPasswordView(BrowserView):
 class AskForPasswordView(BrowserView):
     """
     """
+    reason = u""
 
     def __call__(self):
+        # This will be true if DX and pw-protected enabled
+        context = self.context
+        password_protected = IPasswordProtected(context, None)
+        if not password_protected:
+            # It could be that this is the default view for the
+            # protected parent, so let's try that
+            parent_dp = context.aq_parent.getDefaultPage()
+            if parent_dp == context.id:
+                context = context.aq_parent
+                # This will be true if DX and pw-protected enabled
+                password_protected = IPasswordProtected(context, None)
+
+        if password_protected:
+            reason = password_protected.passw_reason
+            if reason:
+                if IRichTextValue.providedBy(reason):
+                    self.reason = reason.output_relative_to(context)
+                else:
+                    self.reason = reason
+
         if self.request.get("submit", False):
             # The password was submitted
             passw = self.request.get("password", "")
@@ -53,21 +75,6 @@ class AskForPasswordView(BrowserView):
                 passw_hash = md5(passw.encode()).hexdigest()
             else:
                 passw_hash = md5(passw).hexdigest()
-
-            password_protected = None
-
-            context = self.context
-
-            # This will be true if DX and pw-protected enabled
-            password_protected = IPasswordProtected(context, None)
-            if not password_protected:
-                # It could be that this is the default view for the
-                # protected parent, so let's try that
-                parent_dp = context.aq_parent.getDefaultPage()
-                if parent_dp == context.id:
-                    context = context.aq_parent
-                    # This will be true if DX and pw-protected enabled
-                    password_protected = IPasswordProtected(context, None)
 
             if password_protected:
                 if password_protected.is_password_protected():
@@ -178,6 +185,7 @@ class AssignPasswordForm(form.Form):
     @button.buttonAndHandler(_("Cancel"), name="cancel")
     def cancel(self, action):
         self.status = _(u"Cancelled.")
+        self.request.response.redirect(self.context.absolute_url())
 
 
     @button.buttonAndHandler(_("Remove Password Protection"), name="remove_pw", condition=pw_protected)

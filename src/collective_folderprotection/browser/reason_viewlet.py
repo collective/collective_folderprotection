@@ -15,6 +15,8 @@ class ReasonViewlet(ViewletBase):
 
     def update(self):
         super(ReasonViewlet, self).update()
+        if self.request.response.getStatus() == 401:
+            return
         context = self.context
         if not IPloneSiteRoot.providedBy(context):
             if not IFolder.providedBy(self.context):

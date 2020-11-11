@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from Acquisition import aq_inner
 from Acquisition import aq_parent
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 from plone.app.layout.viewlets.common import ViewletBase
@@ -15,10 +16,12 @@ class AlertViewlet(ViewletBase):
 
     def update(self):
         super(AlertViewlet, self).update()
-        context = self.context
+        if self.request.response.getStatus() == 401:
+            return
+        context = aq_inner(self.context)
         if not IPloneSiteRoot.providedBy(context):
-            if not IFolder.providedBy(self.context):
-                context = aq_parent(self.context)
+            if not IFolder.providedBy(context):
+                context = aq_parent(context)
                 if self.context.id != context.getDefaultPage():
                     self.folder_pw_protected = True
 
