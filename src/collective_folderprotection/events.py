@@ -32,7 +32,7 @@ def checkPassword(portal, request):
         authorized = False
         obj_is_protected = False
         try:
-            ob = ob.restrictedTraverse(name)
+            ob = ob.unrestrictedTraverse(name)
         except Exception:
             # This path is not traversable or doesn't exist, just ignore
             break
