@@ -1,8 +1,14 @@
 <div class="context-pw-protected" tal:condition="view/context_pw_protected">
   <div class="alert alert-warning" role="alert">
     <div>
-      <span tal:condition="not:view/folder_pw_protected">This folder is password protected.</span>
-      <span tal:condition="view/folder_pw_protected">A folder containing this item is password protected.</span>
+      <span>This location is password protected.</span>
+    </div>
+  </div>
+</div>
+<div class="folder-pw-protected" tal:condition="view/folder_pw_protected">
+  <div class="alert alert-warning" role="alert">
+    <div>
+      <span>A folder containing this item is password protected.</span>
     </div>
   </div>
 </div>

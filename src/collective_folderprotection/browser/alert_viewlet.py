@@ -18,20 +18,35 @@ class AlertViewlet(ViewletBase):
         super(AlertViewlet, self).update()
         if self.request.response.getStatus() == 401:
             return
+        is_default_page = False
+        parent = None
         context = aq_inner(self.context)
-        if not IPloneSiteRoot.providedBy(context):
-            if not IFolder.providedBy(context):
-                context = aq_parent(context)
-                if self.context.id != context.getDefaultPage():
-                    self.folder_pw_protected = True
 
         passw_behavior = IPasswordProtected(context, None)
         if passw_behavior:
             self.context_pw_protected = passw_behavior.is_password_protected()
 
-        while not IPloneSiteRoot.providedBy(context):
-            context = aq_parent(context)
-            passw_behavior = IPasswordProtected(context, None)
+        if not IPloneSiteRoot.providedBy(context):
+            parent = aq_parent(context)
+            if context.id == parent.getDefaultPage():
+                is_default_page = True
+
+        if is_default_page and not self.context_pw_protected:
+            passw_behavior = IPasswordProtected(parent, None)
+            if passw_behavior:
+                self.context_pw_protected = passw_behavior.is_password_protected()
+
+            if not IPloneSiteRoot.providedBy(parent):
+                parent = aq_parent(parent)
+
+        if parent:
+            passw_behavior = IPasswordProtected(parent, None)
+            if passw_behavior:
+                self.folder_pw_protected = passw_behavior.is_password_protected()
+
+        while not IPloneSiteRoot.providedBy(parent):
+            parent = aq_parent(parent)
+            passw_behavior = IPasswordProtected(parent, None)
             if passw_behavior and passw_behavior.is_password_protected():
-                self.parent_pw_protected = context
+                self.parent_pw_protected = parent
                 break
