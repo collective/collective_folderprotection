@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2 (unreleased)
+2.2 (2021-01-06)
 ++++++++++++++++
 
 - Remove the password protection field from the edit and add forms, to avoid
