@@ -4,7 +4,8 @@ Changelog
 2.3 (unreleased)
 ++++++++++++++++
 
-- Nothing changed yet.
+- Bugfix: Infinite loop when context is the actual Plone site
+  [frapell]
 
 
 2.2 (2021-01-06)

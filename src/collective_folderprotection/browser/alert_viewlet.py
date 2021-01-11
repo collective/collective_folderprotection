@@ -44,9 +44,9 @@ class AlertViewlet(ViewletBase):
             if passw_behavior:
                 self.folder_pw_protected = passw_behavior.is_password_protected()
 
-        while not IPloneSiteRoot.providedBy(parent):
-            parent = aq_parent(parent)
-            passw_behavior = IPasswordProtected(parent, None)
-            if passw_behavior and passw_behavior.is_password_protected():
-                self.parent_pw_protected = parent
-                break
+            while not IPloneSiteRoot.providedBy(parent):
+                parent = aq_parent(parent)
+                passw_behavior = IPasswordProtected(parent, None)
+                if passw_behavior and passw_behavior.is_password_protected():
+                    self.parent_pw_protected = parent
+                    break
