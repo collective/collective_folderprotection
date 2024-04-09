@@ -119,11 +119,9 @@ class AskForPasswordView(BrowserView):
 
                         # Save the hash in a cookie
                         path = context.getPhysicalPath()
-                        virtual_path = self.request.physicalPathToVirtualPath(
-                            path
-                        )
+                        url = self.request.physicalPathToURL(path)
                         options = {
-                            "path": "/".join(("",) + virtual_path),
+                            "path": url,
                             "expires": (DateTime("GMT") + 5).rfc822(),
                         }
                         self.request.response.setCookie(

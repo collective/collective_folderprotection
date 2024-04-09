@@ -13,13 +13,14 @@ from collective_folderprotection.exceptions import (
 from OFS.event import ObjectWillBeMovedEvent
 from Products.statusmessages.interfaces import IStatusMessage
 from plone import api
-
+from posixpath import normpath
+from urllib.parse import unquote
 
 def checkPassword(portal, request):
     portal_path = "/".join(portal.getPhysicalPath())
     # We get the full path
     if "VIRTUAL_URL_PARTS" in request:
-        full_path = request.get("VIRTUAL_URL_PARTS")[1]
+        full_path = "/".join(request.physicalPathFromURL(request.getURL()))
     else:
         full_path = request.get("PATH_INFO")
 
