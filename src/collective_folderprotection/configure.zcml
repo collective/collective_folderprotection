@@ -8,8 +8,6 @@
 
   <five:registerPackage package="." initialize=".initialize" />
 
-  <includeDependencies package="." />
-
   <include package=".behaviors" />
   <include package=".browser" />
 
