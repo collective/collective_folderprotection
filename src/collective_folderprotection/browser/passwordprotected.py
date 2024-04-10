@@ -70,7 +70,9 @@ class AskForPasswordView(BrowserView):
 
         if self.request.get("submit", False):
             # The password was submitted
+            tag = self.request.get("tag", "")
             passw = self.request.get("password", "")
+
             if six.PY3:
                 passw_hash = md5(passw.encode()).hexdigest()
             else:
@@ -86,7 +88,7 @@ class AskForPasswordView(BrowserView):
                     came_from = self.request.get(
                         "came_from", context.absolute_url()
                     )
-                    if passw_hash == password_protected.passw_hash:
+                    if tag in password_protected.passw_dict.keys() and passw_hash == password_protected.passw_dict[tag]:
                         # The user has entered a valid password, then
                         # we store a random hash with a TTL so we know
                         # he already authenticated
@@ -165,18 +167,33 @@ class AssignPasswordForm(form.Form):
         if errors:
             self.status = _(u"Please correct errors")
             return
-        passw = data.get("passw_hash", "")
         passw_reason = data.get("passw_reason", "")
+        passw_dict = data.get("passw_dict", {})
         passw_behavior = IPasswordProtected(self.context)
 
-        if passw and passw != "":
-            passw_behavior.assign_password(passw)
-            self.status = _(u"Password assigned.")
+        if passw_dict:
+            if not passw_behavior.passw_dict:
+                passw_behavior.passw_dict = {}
+            else:
+                ## remove deleted passwords from existing mappings
+                old_keys = passw_behavior.passw_dict.keys()
+                for key in list(old_keys):
+                    if key not in passw_dict.keys():
+                        del passw_behavior.passw_dict[key]
+            # set new/updated tag/passwd combinations
+            for tag, passw in passw_dict.items():
+                if passw:
+                    passw_behavior.assign_password(tag, passw)
+
+            self.status = _(u"Passwords assigned.")
+        else:
+            passw_behavior.passw_dict = {}
 
         if passw_reason:
             passw_behavior.passw_reason = passw_reason
         else:
             passw_behavior.passw_reason = u""
+
         self.request.response.redirect(self.context.absolute_url())
 
 

@@ -17,13 +17,21 @@ from collective_folderprotection import _
 class IPasswordProtected(model.Schema):
     """Behavior interface to enable password protection"""
 
-    passw_hash = schema.Password(
-        title=_(u"Password"),
-        description=_(
-            u"Choose a password to protect this object and, if it is a "
-            u"folder, its children."
-        ),
+    passw_dict = schema.Dict(
+        title='Dict field',
         required=False,
+        key_type=schema.TextLine(
+            title='Key',
+            required=False,
+        ),
+        value_type = schema.Password(
+            title=_(u"ALT Password"),
+            description=_(
+                u"Choose a password to protect this object and, if it is a "
+                u"folder, its children."
+            ),
+            required=False,
+        )
     )
 
     passw_reason = RichTextField(
@@ -36,9 +44,8 @@ class IPasswordProtected(model.Schema):
     )
     form.widget('passw_reason', RichTextFieldWidget)
 
-    form.omitted("passw_hash")
     form.omitted("passw_reason")
-
+    form.omitted("passw_dict")
 
 alsoProvides(IPasswordProtected, IFormFieldProvider)
 

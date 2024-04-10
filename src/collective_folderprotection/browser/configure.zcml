@@ -4,7 +4,7 @@
     xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="colelctive.folderprotection">
 
-    <include package=".widget" />
+    <!-- <include package=".widget" /> -->
 
     <!-- Page to handle the password protected folders -->
     <browser:page

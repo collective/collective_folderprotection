@@ -14,7 +14,7 @@ class PasswordProtected(object):
         self.context = context
 
     def is_password_protected(self):
-        return getattr(self.context, "passw_hash", False)
+        return getattr(self.context, "passw_dict", False)
 
     def allowed_to_access(self):
         allowed = False
@@ -30,10 +30,10 @@ class PasswordProtected(object):
 
         return allowed
 
-    def _assign_password(self, passw=None):
+    def _assign_password(self, tag, passw=None):
         ann = IAnnotations(self.context)
 
-        if passw:
+        if tag and passw:
             # If there's a password, assign it
             if six.PY3:
                 passw_hash = md5(passw.encode()).hexdigest()
@@ -43,27 +43,21 @@ class PasswordProtected(object):
                 # Remove old stored hashes
                 del ann[HASHES_ANNOTATION_KEY]
 
-            self.context.passw_hash = passw_hash
+            self.context.passw_dict[tag] = passw_hash
         else:
-            # If no password was provided, just remove everything
+            # If no tag and password were provided, just remove everything
             if HASHES_ANNOTATION_KEY in ann:
                 # Remove old storde hashes
                 del ann[HASHES_ANNOTATION_KEY]
 
-            self.context.passw_hash = None
+            del self.context.passw_dict
 
-    def assign_password(self, passw):
-        self._assign_password(passw)
+    def assign_password(self, tag, passw):
+        self._assign_password(tag, passw)
+
 
     def remove_password(self):
         self._assign_password(None)
-
-    def _get_password(self):
-        return self.context.passw_hash
-
-    def _set_password(self, value):
-        if value:
-            self.assign_password(value)
 
     def _get_passw_reason(self):
         return self.context.passw_reason
@@ -71,5 +65,11 @@ class PasswordProtected(object):
     def _set_passw_reason(self, value):
         self.context.passw_reason = value
 
-    passw_hash = property(_get_password, _set_password)
+    def _get_passw_dict(self):
+        return self.context.passw_dict
+
+    def _set_passw_dict(self, value):
+        self.context.passw_dict = value
+
     passw_reason = property(_get_passw_reason, _set_passw_reason)
+    passw_dict = property(_get_passw_dict, _set_passw_dict)
