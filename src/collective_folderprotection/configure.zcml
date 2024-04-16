@@ -8,8 +8,6 @@
 
   <five:registerPackage package="." initialize=".initialize" />
 
-  <includeDependencies package="." />
-
   <include package=".behaviors" />
   <include package=".browser" />
 
@@ -21,7 +19,7 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       post_handler=".setuphandlers.post_install"
       />
-      
+
   <genericsetup:registerProfile
       name="test_fixture"
       title="collective_folderprotection"
@@ -45,7 +43,7 @@
       />
 
   <!-- -*- extra stuff goes here -*- -->
-    
+
     <subscriber handler=".events.insertCheckPasswordHook"
         for="Products.CMFCore.interfaces.ISiteRoot
              zope.traversing.interfaces.IBeforeTraverseEvent"
