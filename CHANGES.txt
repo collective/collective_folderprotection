@@ -4,7 +4,8 @@ Changelog
 2.4.2 (unreleased)
 ++++++++++++++++++
 
-- Nothing changed yet.
+- Only set a status message when there is a request
+  [frapell]
 
 
 2.4.1 (2024-04-17)
