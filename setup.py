@@ -16,11 +16,12 @@ long_description = (
 
 setup(name='collective_folderprotection',
       version=version,
-      description="",
+      description="Provide delete, rename and password protection for Plone items.",
       long_description=long_description,
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Framework :: Plone",
         "Operating System :: OS Independent",
@@ -35,7 +36,7 @@ setup(name='collective_folderprotection',
         "Framework :: Plone :: 6.0",
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
-      keywords='',
+      keywords='folder protection plone',
       author='Enfold Systems, Inc.',
       author_email='info@enfoldsystems.com',
       url='https://github.com/collective/collective_folderprotection',
