@@ -4,7 +4,8 @@ Changelog
 2.5 (unreleased)
 ++++++++++++++++
 
-- Nothing changed yet.
+- Add event on folders
+  [frapell]
 
 
 2.4 (2024-04-17)
