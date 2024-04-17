@@ -14,6 +14,4 @@ class RenameProtected(object):
     def _set_rename_protection(self, value):
         self.context.rename_protection = value
 
-    rename_protection = property(
-        _get_rename_protection, _set_rename_protection
-    )
+    rename_protection = property(_get_rename_protection, _set_rename_protection)

@@ -25,7 +25,7 @@ def checkPassword(portal, request):
 
     if full_path.startswith(portal_path):
         # just strip the portal_path from the full_path and the '/'
-        full_path = full_path[len(portal_path) + 1:]
+        full_path = full_path[len(portal_path) + 1 :]
     ob = portal
     # Now iterate over each one
     for name in full_path.split("/"):
@@ -68,7 +68,7 @@ def checkPassword(portal, request):
 
 
 def insertCheckPasswordHook(portal, event):
-    """ Add this hook to the post_traversal so we can check if some object
+    """Add this hook to the post_traversal so we can check if some object
     during the traversal needs a password
     """
     try:
@@ -84,7 +84,9 @@ def preventRemove(object, event):
     messages = IStatusMessage(req)
     if adapter:
         if adapter.delete_protection:
-            messages.add(_(u"Item cannot be deleted because it is protected."), type=u"error")
+            messages.add(
+                _("Item cannot be deleted because it is protected."), type="error"
+            )
             raise DeleteProtectionException()
     else:
         # Check with the parent
@@ -92,7 +94,10 @@ def preventRemove(object, event):
         adapter = IDeleteProtected(parent, None)
         if adapter:
             if adapter.delete_protection:
-                messages.add(_(u"Item cannot be deleted because its parent folder is protected."), type=u"error")
+                messages.add(
+                    _("Item cannot be deleted because its parent folder is protected."),
+                    type="error",
+                )
                 raise DeleteProtectionException()
 
 
@@ -110,7 +115,9 @@ def preventRename(object, event):
         adapter = IRenameProtected(object, None)
         if adapter:
             if adapter.rename_protection:
-                messages.add(_(u"This item is protected against being renamed"), type=u"error")
+                messages.add(
+                    _("This item is protected against being renamed"), type="error"
+                )
                 raise RenameProtectionException()
         else:
             # Check with the parent
@@ -118,8 +125,11 @@ def preventRename(object, event):
             adapter = IRenameProtected(parent, None)
             if adapter:
                 if adapter.rename_protection:
-                    messages.add(_(
-                            u"This folder is protected against renaming "
-                            u"items inside of it."
-                        ), type=u"error")
+                    messages.add(
+                        _(
+                            "This folder is protected against renaming "
+                            "items inside of it."
+                        ),
+                        type="error",
+                    )
                     raise RenameProtectionException()

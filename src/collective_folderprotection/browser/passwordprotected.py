@@ -43,9 +43,9 @@ class RenderPasswordView(BrowserView):
 
 
 class AskForPasswordView(BrowserView):
-    """
-    """
-    reason = u""
+    """ """
+
+    reason = ""
 
     def __call__(self):
         # This will be true if DX and pw-protected enabled
@@ -83,9 +83,7 @@ class AskForPasswordView(BrowserView):
                     # not authenticate...
                     # If there's no came_from, then just go to the
                     # object itself
-                    came_from = self.request.get(
-                        "came_from", context.absolute_url()
-                    )
+                    came_from = self.request.get("came_from", context.absolute_url())
                     if passw_hash == password_protected.passw_hash:
                         # The user has entered a valid password, then
                         # we store a random hash with a TTL so we know
@@ -93,18 +91,14 @@ class AskForPasswordView(BrowserView):
                         ann = IAnnotations(context)
                         hashes = ann.get(HASHES_ANNOTATION_KEY, {})
                         if six.PY3:
-                            random_hash = md5(
-                                str(random()).encode()
-                            ).hexdigest()
+                            random_hash = md5(str(random()).encode()).hexdigest()
                         else:
                             random_hash = md5(str(random())).hexdigest()
                         while random_hash in hashes:
                             # This would be *REALLY* hard to happen,
                             # but just in case...
                             if six.PY3:
-                                random_hash = md5(
-                                    str(random()).encode()
-                                ).hexdigest()
+                                random_hash = md5(str(random()).encode()).hexdigest()
                             else:
                                 random_hash = md5(str(random())).hexdigest()
 
@@ -119,9 +113,7 @@ class AskForPasswordView(BrowserView):
 
                         # Save the hash in a cookie
                         path = context.getPhysicalPath()
-                        virtual_path = self.request.physicalPathToVirtualPath(
-                            path
-                        )
+                        virtual_path = self.request.physicalPathToVirtualPath(path)
                         options = {
                             "path": "/".join(("",) + virtual_path),
                             "expires": (DateTime("GMT") + 5).rfc822(),
@@ -160,12 +152,11 @@ class AssignPasswordForm(form.Form):
         if "save" in self.actions:
             self.actions["save"].addClass("btn-success")
 
-
     @button.buttonAndHandler(_("Save"), name="save")
     def save(self, action):
         data, errors = self.extractData()
         if errors:
-            self.status = _(u"Please correct errors")
+            self.status = _("Please correct errors")
             return
         passw = data.get("passw_hash", "")
         passw_reason = data.get("passw_reason", "")
@@ -173,28 +164,26 @@ class AssignPasswordForm(form.Form):
 
         if passw and passw != "":
             passw_behavior.assign_password(passw)
-            self.status = _(u"Password assigned.")
+            self.status = _("Password assigned.")
 
         if passw_reason:
             passw_behavior.passw_reason = passw_reason
         else:
-            passw_behavior.passw_reason = u""
+            passw_behavior.passw_reason = ""
         self.request.response.redirect(self.context.absolute_url())
-
 
     @button.buttonAndHandler(_("Cancel"), name="cancel")
     def cancel(self, action):
-        self.status = _(u"Cancelled.")
+        self.status = _("Cancelled.")
         self.request.response.redirect(self.context.absolute_url())
 
-
-    @button.buttonAndHandler(_("Remove Password Protection"), name="remove_pw", condition=pw_protected)
+    @button.buttonAndHandler(
+        _("Remove Password Protection"), name="remove_pw", condition=pw_protected
+    )
     def remove_pw(self, action):
         passw_behavior = IPasswordProtected(self.context)
         passw_behavior.remove_password()
-        self.status = _(
-            u"Password protection removed from this location."
-        )
+        self.status = _("Password protection removed from this location.")
         self.request.response.redirect(self.context.absolute_url())
 
 
@@ -203,7 +192,7 @@ AssignPasswordFormView = wrap_form(AssignPasswordForm)
 
 class IAssignPasswordValidation(Interface):
     def allowed():
-        """ Decide when to show the Assign password tab"""
+        """Decide when to show the Assign password tab"""
 
 
 class AssignPasswordValidation(BrowserView):
@@ -266,7 +255,7 @@ class PasswordProtectedIcon(CatalogBrainContentIcon):
             path = "++resource++resources/lock_unlocked_16.png"
 
         portal_state_view = getMultiAdapter(
-            (self.context, self.request), name=u"plone_portal_state"
+            (self.context, self.request), name="plone_portal_state"
         )
         portal_url = portal_state_view.portal_url()
         return "%s/%s" % (portal_url, path)

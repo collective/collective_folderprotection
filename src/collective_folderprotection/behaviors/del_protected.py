@@ -14,6 +14,4 @@ class DeleteProtected(object):
     def _set_delete_protection(self, value):
         self.context.delete_protection = value
 
-    delete_protection = property(
-        _get_delete_protection, _set_delete_protection
-    )
+    delete_protection = property(_get_delete_protection, _set_delete_protection)

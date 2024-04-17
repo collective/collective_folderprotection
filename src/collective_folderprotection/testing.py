@@ -20,9 +20,7 @@ class CollectivefolderprotectionLayer(PloneSandboxLayer):
         import collective_folderprotection
 
         self.loadZCML(package=collective_folderprotection)
-        self.loadZCML(
-            package=collective_folderprotection, name="overrides.zcml"
-        )
+        self.loadZCML(package=collective_folderprotection, name="overrides.zcml")
         import Products.CMFQuickInstallerTool
 
         self.loadZCML(package=Products.CMFQuickInstallerTool)
@@ -39,9 +37,7 @@ class CollectivefolderprotectionLayer(PloneSandboxLayer):
         # Create a contributor user
         pas = portal["acl_users"]
         pas.source_users.addUser("contributor", "contributor", "contributor")
-        pas.portal_role_manager.doAssignRoleToPrincipal(
-            "contributor", "Contributor"
-        )
+        pas.portal_role_manager.doAssignRoleToPrincipal("contributor", "Contributor")
 
 
 COLLECTIVE_FOLDERPROTECTION_FIXTURE = CollectivefolderprotectionLayer()

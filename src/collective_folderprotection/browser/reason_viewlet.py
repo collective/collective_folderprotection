@@ -8,10 +8,10 @@ from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 
 
 class ReasonViewlet(ViewletBase):
-    """ Displays alert messages with the reason on why this content is pw protected """
+    """Displays alert messages with the reason on why this content is pw protected"""
 
     context_pw_protected = False
-    reason = u""
+    reason = ""
 
     def update(self):
         super(ReasonViewlet, self).update()

@@ -42,8 +42,8 @@ class DeleteActionView(BaseDeleteActionView):
                 if adapter.delete_protection:
                     self.errors.append(
                         _(
-                            u"This folder is protected against deleting "
-                            u"items inside of it."
+                            "This folder is protected against deleting "
+                            "items inside of it."
                         )
                     )
                     return json.dumps({"html": FOLDER_PROTECTED_TEMPLATE})
@@ -59,9 +59,7 @@ class DeleteActionView(BaseDeleteActionView):
             context = aq_inner(self.context)
             selection = self.get_selection()
 
-            parts = str(self.request.form.get("folder", "").lstrip("/")).split(
-                "/"
-            )
+            parts = str(self.request.form.get("folder", "").lstrip("/")).split("/")
             if parts:
                 parent = self.site.unrestrictedTraverse("/".join(parts[:-1]))
                 self.dest = parent.restrictedTraverse(parts[-1])
@@ -72,8 +70,8 @@ class DeleteActionView(BaseDeleteActionView):
                 if adapter.delete_protection:
                     self.errors.append(
                         _(
-                            u"This folder is protected against deleting "
-                            u"items inside of it."
+                            "This folder is protected against deleting "
+                            "items inside of it."
                         )
                     )
                     return self.message(list())
@@ -100,21 +98,17 @@ class DeleteActionView(BaseDeleteActionView):
                 if adapter:
                     if adapter.delete_protection:
                         msgid = _(
-                            u"protected_item_delete",
+                            "protected_item_delete",
                             default=(
-                                u"Item ${title} is protected against "
-                                u"being deleted"
+                                "Item ${title} is protected against " "being deleted"
                             ),
-                            mapping={u"title": obj.Title()},
+                            mapping={"title": obj.Title()},
                         )
                         self.errors.append(msgid)
                         return self.message(list())
 
-                if (
-                    self.required_obj_permission
-                    and not self.mtool.checkPermission(
-                        self.required_obj_permission, obj
-                    )
+                if self.required_obj_permission and not self.mtool.checkPermission(
+                    self.required_obj_permission, obj
                 ):
                     self.errors.append(
                         PloneMessageFactory(

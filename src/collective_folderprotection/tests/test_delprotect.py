@@ -42,13 +42,9 @@ class TestDelProtect(unittest.TestCase):
         self.not_protected.invokeFactory("Document", "internal")
 
     def test_unable_to_remove_protected(self):
-        self.assertRaises(
-            Unauthorized, self.protected.manage_delObjects, "internal"
-        )
+        self.assertRaises(Unauthorized, self.protected.manage_delObjects, "internal")
         self.assertIn("internal", self.protected)
-        self.assertRaises(
-            Unauthorized, self.portal.manage_delObjects, "protected"
-        )
+        self.assertRaises(Unauthorized, self.portal.manage_delObjects, "protected")
         self.assertIn("protected", self.portal)
 
     def test_able_to_remove_unprotected(self):

@@ -12,8 +12,7 @@ from zope.interface import implementer_only
 
 
 class IPasswordNoAutocompleteWidget(IPasswordWidget):
-    """
-    """
+    """ """
 
 
 @implementer_only(IPasswordNoAutocompleteWidget)
@@ -21,7 +20,7 @@ class PasswordNoAutocompleteWidget(PasswordWidget):
     """Input type password widget implementation with no autocomplete."""
 
 
-@adapter(getSpecification(IPasswordProtected['passw_hash']), IFormLayer)
+@adapter(getSpecification(IPasswordProtected["passw_hash"]), IFormLayer)
 @implementer(IFieldWidget)
 def PasswordNoAutocompleteFieldWidget(field, request):
     return FieldWidget(field, PasswordNoAutocompleteWidget(request))

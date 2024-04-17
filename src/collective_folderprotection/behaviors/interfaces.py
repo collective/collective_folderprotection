@@ -18,23 +18,23 @@ class IPasswordProtected(model.Schema):
     """Behavior interface to enable password protection"""
 
     passw_hash = schema.Password(
-        title=_(u"Password"),
+        title=_("Password"),
         description=_(
-            u"Choose a password to protect this object and, if it is a "
-            u"folder, its children."
+            "Choose a password to protect this object and, if it is a "
+            "folder, its children."
         ),
         required=False,
     )
 
     passw_reason = RichTextField(
-        title=_(u'Reason'),
+        title=_("Reason"),
         description=_(
-            u"You can add a reason on why this folder is being protected "
-            u"by a password."
+            "You can add a reason on why this folder is being protected "
+            "by a password."
         ),
         required=False,
     )
-    form.widget('passw_reason', RichTextFieldWidget)
+    form.widget("passw_reason", RichTextFieldWidget)
 
     form.omitted("passw_hash")
     form.omitted("passw_reason")
@@ -47,12 +47,12 @@ class IDeleteProtected(model.Schema):
     """Marker interface to enable delete protection behavior"""
 
     delete_protection = schema.Bool(
-        title=_(u"Delete protection"),
+        title=_("Delete protection"),
         description=_(
-            u"Mark this checkbox if you want to protect this object, and its "
-            u"children (if this is a folder) from being deleted. NOTE: In "
-            u"folders, the delete protection will only protect direct "
-            u"children, it will not recurse into subfolders."
+            "Mark this checkbox if you want to protect this object, and its "
+            "children (if this is a folder) from being deleted. NOTE: In "
+            "folders, the delete protection will only protect direct "
+            "children, it will not recurse into subfolders."
         ),
         required=False,
     )
@@ -69,12 +69,12 @@ class IRenameProtected(model.Schema):
     """Marker interface to enable rename protection behavior"""
 
     rename_protection = schema.Bool(
-        title=_(u"Rename protection"),
+        title=_("Rename protection"),
         description=_(
-            u"Mark this checkbox if you want to protect this object, and its "
-            u"children (if this is a folder) from being renamed. NOTE: In "
-            u"folders, the rename protection will only protect direct "
-            u"children, it will not recurse into subfolders."
+            "Mark this checkbox if you want to protect this object, and its "
+            "children (if this is a folder) from being renamed. NOTE: In "
+            "folders, the rename protection will only protect direct "
+            "children, it will not recurse into subfolders."
         ),
         required=False,
     )

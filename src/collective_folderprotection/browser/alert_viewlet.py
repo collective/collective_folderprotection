@@ -3,12 +3,11 @@ from Acquisition import aq_inner
 from Acquisition import aq_parent
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 from plone.app.layout.viewlets.common import ViewletBase
-from plone.app.contenttypes.interfaces import IFolder
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 
 
 class AlertViewlet(ViewletBase):
-    """ Displays alert messages when content is pw protected"""
+    """Displays alert messages when content is pw protected"""
 
     context_pw_protected = False
     folder_pw_protected = False

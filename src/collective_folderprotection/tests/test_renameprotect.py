@@ -63,16 +63,12 @@ class TestRenameProtect(unittest.TestCase):
         self.not_protected.manage_renameObjects(["internal"], ["new-internal"])
         self.assertNotIn("internal", self.not_protected)
         self.assertIn("new-internal", self.not_protected)
-        self.portal.manage_renameObjects(
-            ["not-protected"], ["new-not-protected"]
-        )
+        self.portal.manage_renameObjects(["not-protected"], ["new-not-protected"])
         self.assertNotIn("not-protected", self.portal)
         self.assertIn("new-not-protected", self.portal)
 
     def test_able_to_rename_disabled(self):
-        self.protected_disabled.manage_renameObjects(
-            ["internal"], ["new-internal"]
-        )
+        self.protected_disabled.manage_renameObjects(["internal"], ["new-internal"])
         self.assertNotIn("internal", self.protected_disabled)
         self.assertIn("new-internal", self.protected_disabled)
         self.portal.manage_renameObjects(

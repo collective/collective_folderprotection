@@ -4,8 +4,7 @@ from zope.interface.common.interfaces import IException
 
 
 class IPasswordProtectedUnauthorized(IException):
-    """
-    """
+    """ """
 
 
 class IDeleteProtectionException(IException):
@@ -60,11 +59,9 @@ class PasswordProtectedUnauthorized(Exception):
 
 @implementer(IDeleteProtectionException)
 class DeleteProtectionException(Exception):
-    """
-    """
+    """ """
 
 
 @implementer(IRenameProtectionException)
 class RenameProtectionException(Exception):
-    """
-    """
+    """ """

@@ -16,7 +16,7 @@ from z3c.form import button
 
 
 class RenameForm(BaseRenameForm):
-    @button.buttonAndHandler(PloneMessageFactory(u"Rename"), name="Rename")
+    @button.buttonAndHandler(PloneMessageFactory("Rename"), name="Rename")
     def handle_rename(self, action):
         # First check if the object itself is protected
         protected = False
@@ -24,7 +24,7 @@ class RenameForm(BaseRenameForm):
         if adapter:
             if adapter.rename_protection:
                 IStatusMessage(self.request).add(
-                    _(u"This item is protected against being renamed"),
+                    _("This item is protected against being renamed"),
                     type="error",
                 )
                 protected = True
@@ -36,8 +36,8 @@ class RenameForm(BaseRenameForm):
                 if adapter.rename_protection:
                     IStatusMessage(self.request).add(
                         _(
-                            u"This folder is protected against renaming "
-                            u"items inside of it."
+                            "This folder is protected against renaming "
+                            "items inside of it."
                         ),
                         type="error",
                     )
@@ -48,7 +48,7 @@ class RenameForm(BaseRenameForm):
             return super(RenameForm, self).handle_rename(self, action)
 
     @button.buttonAndHandler(
-        PloneMessageFactory(u"label_cancel", default=u"Cancel"), name="Cancel"
+        PloneMessageFactory("label_cancel", default="Cancel"), name="Cancel"
     )
     def handle_cancel(self, action):
         self.request.response.redirect(self.view_url())
@@ -74,12 +74,9 @@ class RenameActionView(BaseRenameActionView):
             if adapter:
                 if adapter.rename_protection:
                     msgid = _(
-                        u"protected_item_rename",
-                        default=(
-                            u"Item ${title} is protected against "
-                            u"being renamed"
-                        ),
-                        mapping={u"title": obj.Title()},
+                        "protected_item_rename",
+                        default=("Item ${title} is protected against " "being renamed"),
+                        mapping={"title": obj.Title()},
                     )
                     self.errors.append(msgid)
                     return self.message(list())
@@ -91,8 +88,8 @@ class RenameActionView(BaseRenameActionView):
                     if adapter.rename_protection:
                         self.errors.append(
                             _(
-                                u"This folder is protected against renaming "
-                                u"items inside of it."
+                                "This folder is protected against renaming "
+                                "items inside of it."
                             )
                         )
                         return self.message(list())
