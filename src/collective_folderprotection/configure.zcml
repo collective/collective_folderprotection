@@ -54,8 +54,18 @@
              OFS.interfaces.IObjectWillBeRemovedEvent"
         />
 
+    <subscriber handler=".events.preventRemove"
+        for="plone.dexterity.interfaces.IDexterityContainer
+             OFS.interfaces.IObjectWillBeRemovedEvent"
+        />
+
     <subscriber handler=".events.preventRename"
         for="plone.dexterity.interfaces.IDexterityItem
+             OFS.interfaces.IObjectWillBeMovedEvent"
+        />
+
+    <subscriber handler=".events.preventRename"
+        for="plone.dexterity.interfaces.IDexterityContainer
              OFS.interfaces.IObjectWillBeMovedEvent"
         />
 
