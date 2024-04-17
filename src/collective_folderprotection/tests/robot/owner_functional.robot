@@ -67,4 +67,4 @@ To remove password, check the "Reset password" checkbox
     Select Checkbox  css=input#form-widgets-reset_password-0
     Click Button  Save
     Page Should Contain  This content is not going to be password protected.
-    
+

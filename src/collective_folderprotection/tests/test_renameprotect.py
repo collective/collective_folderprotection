@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from AccessControl.unauthorized import Unauthorized
-
+from collective_folderprotection.exceptions import RenameProtectionException
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 
 from collective_folderprotection.behaviors.interfaces import IRenameProtected
-from collective_folderprotection.testing import (
-    COLLECTIVE_FOLDERPROTECTION_INTEGRATION_TESTING,
-)
+from collective_folderprotection.testing import INTEGRATION_TESTING
 
 
 class TestRenameProtect(unittest.TestCase):
 
-    layer = COLLECTIVE_FOLDERPROTECTION_INTEGRATION_TESTING
+    layer = INTEGRATION_TESTING
 
     def setUp(self):
         self.app = self.layer["app"]
@@ -43,7 +40,7 @@ class TestRenameProtect(unittest.TestCase):
 
     def test_unable_to_rename_protected(self):
         self.assertRaises(
-            Unauthorized,
+            RenameProtectionException,
             self.protected.manage_renameObjects,
             ["internal"],
             ["new-internal"],
@@ -51,7 +48,7 @@ class TestRenameProtect(unittest.TestCase):
         self.assertIn("internal", self.protected)
         self.assertNotIn("new-internal", self.protected)
         self.assertRaises(
-            Unauthorized,
+            RenameProtectionException,
             self.portal.manage_renameObjects,
             ["protected"],
             ["new-protected"],

@@ -15,14 +15,12 @@ from collective_folderprotection.behaviors.interfaces import IPasswordProtected
 from collective_folderprotection.config import HASHES_ANNOTATION_KEY
 from collective_folderprotection.config import HASH_COOKIE_KEY
 
-from collective_folderprotection.testing import (
-    COLLECTIVE_FOLDERPROTECTION_INTEGRATION_TESTING,
-)
+from collective_folderprotection.testing import INTEGRATION_TESTING
 
 
 class TestPasswordProtect(unittest.TestCase):
 
-    layer = COLLECTIVE_FOLDERPROTECTION_INTEGRATION_TESTING
+    layer = INTEGRATION_TESTING
 
     def setUp(self):
         self.app = self.layer["app"]

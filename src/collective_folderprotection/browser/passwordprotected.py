@@ -20,7 +20,7 @@ from plone.app.layout.icons.icons import CatalogBrainContentIcon
 from plone.app.layout.icons.interfaces import IContentIcon
 from plone.app.textfield.interfaces import IRichTextValue
 
-from plone.app.z3cform.layout import wrap_form
+from plone.z3cform.layout import wrap_form
 
 from Products.Five.browser import BrowserView
 

@@ -1,33 +1,30 @@
 # -*- coding: utf-8 -*-
+from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
+from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import applyProfile
-from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
 
 from plone.testing import z2
 
+try:
+    from plone.testing.zope import WSGI_SERVER_FIXTURE
+except ImportError:
+    from plone.testing.z2 import ZSERVER_FIXTURE as WSGI_SERVER_FIXTURE
 
 class CollectivefolderprotectionLayer(PloneSandboxLayer):
 
-    defaultBases = (PLONE_FIXTURE,)
+    defaultBases = (PLONE_APP_CONTENTTYPES_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
-        import plone.app.contenttypes
-
-        self.loadZCML(package=plone.app.contenttypes)
         import collective_folderprotection
 
         self.loadZCML(package=collective_folderprotection)
         self.loadZCML(package=collective_folderprotection, name="overrides.zcml")
-        import Products.CMFQuickInstallerTool
-
-        self.loadZCML(package=Products.CMFQuickInstallerTool)
 
     def setUpPloneSite(self, portal):
-        applyProfile(portal, "plone.app.contenttypes:default")
-        applyProfile(portal, "collective_folderprotection:test_fixture")
+        self.applyProfile(portal, "collective_folderprotection:test_fixture")
 
         # Create a manager user
         pas = portal["acl_users"]
@@ -40,12 +37,14 @@ class CollectivefolderprotectionLayer(PloneSandboxLayer):
         pas.portal_role_manager.doAssignRoleToPrincipal("contributor", "Contributor")
 
 
-COLLECTIVE_FOLDERPROTECTION_FIXTURE = CollectivefolderprotectionLayer()
-COLLECTIVE_FOLDERPROTECTION_INTEGRATION_TESTING = IntegrationTesting(
-    bases=(COLLECTIVE_FOLDERPROTECTION_FIXTURE,),
-    name="CollectivefolderprotectionLayer:Integration",
+FIXTURE = CollectivefolderprotectionLayer()
+INTEGRATION_TESTING = IntegrationTesting(
+    bases=(FIXTURE,), name="collective_folderprotection:Integration"
 )
-COLLECTIVE_FOLDERPROTECTION_FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(COLLECTIVE_FOLDERPROTECTION_FIXTURE, z2.ZSERVER_FIXTURE),
-    name="CollectivefolderprotectionLayer:Functional",
+FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(FIXTURE,), name="collective_folderprotection:Functional"
+)
+ACCEPTANCE_TESTING = FunctionalTesting(
+    bases=(FIXTURE, REMOTE_LIBRARY_BUNDLE_FIXTURE, WSGI_SERVER_FIXTURE),
+    name="collective_folderprotection:Acceptance",
 )

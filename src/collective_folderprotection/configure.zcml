@@ -6,7 +6,7 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="collective_folderprotection">
 
-  <five:registerPackage package="." initialize=".initialize" />
+  <include package="plone.app.contenttypes" />
 
   <include package=".behaviors" />
   <include package=".browser" />
@@ -50,12 +50,12 @@
         />
 
     <subscriber handler=".events.preventRemove"
-        for="*
+        for="plone.dexterity.interfaces.IDexterityItem
              OFS.interfaces.IObjectWillBeRemovedEvent"
         />
 
     <subscriber handler=".events.preventRename"
-        for="*
+        for="plone.dexterity.interfaces.IDexterityItem
              OFS.interfaces.IObjectWillBeMovedEvent"
         />
 

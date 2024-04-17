@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from AccessControl.unauthorized import Unauthorized
-
+from collective_folderprotection.exceptions import DeleteProtectionException
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 
 from collective_folderprotection.behaviors.interfaces import IDeleteProtected
-from collective_folderprotection.testing import (
-    COLLECTIVE_FOLDERPROTECTION_INTEGRATION_TESTING,
-)
+from collective_folderprotection.testing import INTEGRATION_TESTING
 
 
 class TestDelProtect(unittest.TestCase):
 
-    layer = COLLECTIVE_FOLDERPROTECTION_INTEGRATION_TESTING
+    layer = INTEGRATION_TESTING
 
     def setUp(self):
         self.app = self.layer["app"]
@@ -42,9 +39,9 @@ class TestDelProtect(unittest.TestCase):
         self.not_protected.invokeFactory("Document", "internal")
 
     def test_unable_to_remove_protected(self):
-        self.assertRaises(Unauthorized, self.protected.manage_delObjects, "internal")
+        self.assertRaises(DeleteProtectionException, self.protected.manage_delObjects, "internal")
         self.assertIn("internal", self.protected)
-        self.assertRaises(Unauthorized, self.portal.manage_delObjects, "protected")
+        self.assertRaises(DeleteProtectionException, self.portal.manage_delObjects, "protected")
         self.assertIn("protected", self.portal)
 
     def test_able_to_remove_unprotected(self):

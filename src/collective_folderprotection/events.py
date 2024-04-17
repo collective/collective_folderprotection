@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from Acquisition import aq_parent
 from collective_folderprotection import _
 from collective_folderprotection.behaviors.interfaces import IDeleteProtected
 from collective_folderprotection.behaviors.interfaces import IPasswordProtected
@@ -90,7 +91,7 @@ def preventRemove(object, event):
             raise DeleteProtectionException()
     else:
         # Check with the parent
-        parent = event.oldParent
+        parent = aq_parent(object)
         adapter = IDeleteProtected(parent, None)
         if adapter:
             if adapter.delete_protection:
@@ -121,7 +122,7 @@ def preventRename(object, event):
                 raise RenameProtectionException()
         else:
             # Check with the parent
-            parent = event.oldParent
+            parent = aq_parent(object)
             adapter = IRenameProtected(parent, None)
             if adapter:
                 if adapter.rename_protection:
