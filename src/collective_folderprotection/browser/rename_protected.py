@@ -9,10 +9,13 @@ from plone.app.content.browser.contents.rename import (
     RenameActionView as BaseRenameActionView,
 )
 from Products.CMFCore.utils import getToolByName
-from plone.base import PloneMessageFactory
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form import button
+try:
+    from plone.base import PloneMessageFactory
+except:
+    from Products.CMFPlone import PloneMessageFactory
 
 
 class RenameForm(BaseRenameForm):
