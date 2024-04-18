@@ -24,6 +24,8 @@ class PasswordProtected(object):
         ann = IAnnotations(self.context)
         hashes = ann.get(HASHES_ANNOTATION_KEY, {})
         user_hash = request.cookies.get(HASH_COOKIE_KEY, None)
+        logger.info("Cookie hash: %s" % user_hash)
+        logger.info("Stored hashes: %s" % hashes.keys())
 
         if user_hash and user_hash in hashes:
             now = datetime.now()
