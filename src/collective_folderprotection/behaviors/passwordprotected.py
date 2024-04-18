@@ -24,17 +24,17 @@ class PasswordProtected(object):
         ann = IAnnotations(self.context)
         hashes = ann.get(HASHES_ANNOTATION_KEY, {})
         user_hash = request.cookies.get(HASH_COOKIE_KEY, None)
-        logger.info("Cookie hash: %s" % user_hash)
-        logger.info("Stored hashes: %s" % hashes.keys())
+        logger.debug("Cookie hash: %s" % user_hash)
+        logger.debug("Stored hashes: %s" % hashes.keys())
 
         if user_hash and user_hash in hashes:
             now = datetime.now()
             valid_until = hashes[user_hash]
             allowed = valid_until > now
         if allowed:
-            logger.info("User allowed to access protected resource")
+            logger.debug("User allowed to access protected resource")
         else:
-            logger.info("User blocked access to protected resource")
+            logger.debug("User blocked access to protected resource")
         return allowed
 
     def _assign_password(self, passw=None):

@@ -120,7 +120,7 @@ class AskForPasswordView(BrowserView):
                             "path": "/".join(("",) + virtual_path),
                             "expires": (DateTime("GMT") + 5).rfc822(),
                         }
-                        logger.info("Valid password, setting cookie")
+                        logger.debug("Valid password, setting cookie")
                         self.request.response.setCookie(
                             HASH_COOKIE_KEY, random_hash, **options
                         )
