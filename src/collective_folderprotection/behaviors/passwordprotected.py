@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import six
 from datetime import datetime
 from hashlib import md5
@@ -8,6 +9,7 @@ from zope.annotation import IAnnotations
 from collective_folderprotection.config import HASHES_ANNOTATION_KEY
 from collective_folderprotection.config import HASH_COOKIE_KEY
 
+logger = logging.getLogger(__name__)
 
 class PasswordProtected(object):
     def __init__(self, context):
@@ -27,7 +29,10 @@ class PasswordProtected(object):
             now = datetime.now()
             valid_until = hashes[user_hash]
             allowed = valid_until > now
-
+        if allowed:
+            logger.info("User allowed to access protected resource")
+        else:
+            logger.info("User blocked access to protected resource")
         return allowed
 
     def _assign_password(self, passw=None):

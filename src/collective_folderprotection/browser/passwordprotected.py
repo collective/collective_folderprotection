@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import six
 from hashlib import md5
 from datetime import datetime
@@ -30,6 +31,7 @@ from collective_folderprotection.config import HASH_COOKIE_KEY
 from collective_folderprotection.config import TIME_TO_LIVE
 from collective_folderprotection import _
 
+logger = logging.getLogger(__name__)
 
 class RenderPasswordView(BrowserView):
     def __call__(self):
@@ -118,6 +120,7 @@ class AskForPasswordView(BrowserView):
                             "path": "/".join(("",) + virtual_path),
                             "expires": (DateTime("GMT") + 5).rfc822(),
                         }
+                        logger.info("Valid password, setting cookie")
                         self.request.response.setCookie(
                             HASH_COOKIE_KEY, random_hash, **options
                         )
